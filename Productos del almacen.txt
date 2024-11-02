@@ -1,0 +1,29 @@
+[
+    {
+        "tipo": "Productos_contables",
+        "perro": {
+            "nombre": "perro",
+            "cantidad": 5,
+            "precio_x_unidad": null
+        }
+    },
+    {
+        "tipo": "Productos_contables",
+        "cerveza un laguer": {
+            "nombre": "cerveza un laguer",
+            "cantidad": 34,
+            "precio_x_unidad": {
+                "cantidad": 35,
+                "tipo": "usd"
+            }
+        }
+    },
+    {
+        "tipo": "Productos_contables",
+        "gato": {
+            "nombre": "gato",
+            "cantidad": 4,
+            "precio_x_unidad": null
+        }
+    }
+]
