@@ -3,7 +3,7 @@ from controlador.models.moneda import Moneda
 from controlador.models.unidadadMedida import Unidades_Medida
 from controlador.controlProductos import Control
 from vista.ui import Ui
-from funciones import Creator_Productos,Load_archivo
+from carga_or_creator_or_find import Creator_Productos,Load_archivo
 from tkinter import Tk
 
 def funcion_auxiliar_del_main(orden):
