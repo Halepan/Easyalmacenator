@@ -99,6 +99,59 @@ def Creator_Productos(registro):
 
      # Se retorna el producto creado
      return producto 
+  
+# Creación de productos de pesajes
+  elif tipo == "Producto_x_pesaje":
+   # Se busca la clave del producto_x_pesaje dentro del registro
+   for clave in registro:
+    if clave != "tipo":
+     # Se extraen los datos del producto_x_pesaje
+     claves_cargada = registro[clave]
+     # Se crea el objeto del producto_x_pesaje
+     producto = Producto_x_pesaje(
+       claves_cargada['nombre'],
+       claves_cargada['peso_del_contenedor'],
+       claves_cargada['cantidad_de_contenedores_llenos'],
+       claves_cargada['peso_total_de_contenedores_no_llenos'],
+       claves_cargada['pesaje_total_del_producto'],
+       claves_cargada['precio_x_contenedor'],
+       claves_cargada['precio_x_pesaje']
+     )
+
+     # Se establecen las unidades de medida y moneda, si están definidas
+     if producto.pesaje_total_del_producto:
+      producto.pesaje_total_del_producto = Unidades_Medida(
+        producto.pesaje_total_del_producto['cantidad'],
+        producto.pesaje_total_del_producto['unidad_de_medida']
+      )
+
+     if producto.peso_del_contenedor:
+      producto.peso_del_contenedor = Unidades_Medida(
+        producto.peso_del_contenedor['cantidad'],
+        producto.peso_del_contenedor['unidad_de_medida']
+      )
+
+     if producto.peso_total_de_contenedores_no_llenos:
+      producto.peso_total_de_contenedores_no_llenos = Unidades_Medida(
+        producto.peso_total_de_contenedores_no_llenos['cantidad'],
+        producto.peso_total_de_contenedores_no_llenos['unidad_de_medida']
+      )
+
+     if producto.precio_x_contenedor:
+      producto.precio_x_contenedor = Moneda(
+        producto.precio_x_contenedor['cantidad'],
+        producto.precio_x_contenedor['tipo']
+      )
+
+     if producto.precio_x_pesaje:
+      producto.precio_x_pesaje = Moneda(
+        producto.precio_x_pesaje['cantidad'],
+        producto.precio_x_pesaje['tipo']
+      )
+
+     # Se retorna el producto creado
+     return producto 
+
   print("error inesperado")
  # Se manejan los errores de claves faltantes
  except KeyError:

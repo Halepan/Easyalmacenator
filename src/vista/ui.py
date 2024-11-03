@@ -45,6 +45,8 @@ class Ui():
    if "Agregar producto" in orden:
     tipo = orden["Agregar producto"]["tipo"]
     nombre = orden["Agregar producto"]["nombre"]
+    moneda = orden["Agregar producto"]["moneda"]
+
     if nombre.get():
      nombre = str(nombre.get())
      print(nombre)
@@ -52,70 +54,181 @@ class Ui():
      raise EntryVacios()
 
     if tipo == "Productos_contables":
-     try:
-      cantidad = orden["Agregar producto"]["cantidad"]
-      precio =orden["Agregar producto"]["precio_x_unidad"]
-      moneda = orden["Agregar producto"]["Moneda"]
-      if cantidad.get():
-       cantidad = int(cantidad.get())
+     cantidad = orden["Agregar producto"]["cantidad"]
+     precio =orden["Agregar producto"]["precio_x_unidad"]
+     if cantidad.get():
+      cantidad = int(cantidad.get())
+     else:
+      raise EntryVacios()
+     
+     if precio.get():  
+      if moneda.get() != "Tipo de moneda":
+       precio = {"cantidad":float(precio.get()),"tipo":moneda.get()}
       else:
-       raise EntryVacios()
-      
-      if precio.get():
-       
-       if moneda.get() != "Tipo de moneda":
-        precio = {"cantidad":float(precio.get()),"tipo":moneda.get()}
-       else:
-        raise MEntryVacios()
-      else:
-       precio = None
- 
-      orden["Agregar producto"] = {"tipo":tipo,nombre:{'nombre':nombre,'cantidad':cantidad,
+       raise MEntryVacios()
+     else:
+      precio = None
+
+     orden["Agregar producto"] = {"tipo":tipo,nombre:{'nombre':nombre,'cantidad':cantidad,
             'precio_x_unidad':precio}}
 
-     except EntryVacios:messagebox.showerror("Error De Guardado", "Se debe registrar la cantidad del producto")
-     except ValueError:messagebox.showerror("Error De Guardado", "La cantidad y el precio deben ser numeros no letras")
-     except MEntryVacios:messagebox.showerror("Error De Guardado", "Si se registro un precio, tambien se debe seleccionar el tipo de moneda")
 
     if tipo == "Producto_liquido":
+     
       cantidad_de_contenedores_llenos = orden["Agregar producto"]["cantidad_de_contenedores_llenos"]
+      unidad_de_medida= orden["Agregar producto"]["unidad_de_medida"]
+      cantidad_de_liquido_x_contenedor = orden["Agregar producto"]["cantidad_de_liquido_x_contenedor"]
+      cantidad_de_liquido_en_contenedores_no_llenos = orden["Agregar producto"]\
+        ["cantidad_de_liquido_en_contenedores_no_llenos"]
+      precio_del_liquido = orden["Agregar producto"]["precio_del_liquido"]
+      precio_del_contenedor= orden["Agregar producto"]["precio_por_contenedor"]
+      cantidad_de_liquido_total = orden["Agregar producto"]["cantidad_de_liquido_total"]
+
       if cantidad_de_contenedores_llenos.get():
        cantidad_de_contenedores_llenos = int(cantidad_de_contenedores_llenos.get())
       else:
        raise EntryVacios()
-      
-      cantidad_de_liquido_en_contenedores_no_llenos_entry = orden["Agregar producto"]\
-        ["cantidad_de_liquido_en_contenedores_no_llenos"]
+       
+      if cantidad_de_liquido_x_contenedor.get():
+       if unidad_de_medida != "Unidad de medida":
+        cantidad_de_liquido_x_contenedor = {"cantidad":float(
+         cantidad_de_liquido_x_contenedor.get()),
+         "unidad de medida":unidad_de_medida.get()}
+       else:
+        raise UEntryVacios()
+      else:
+       cantidad_de_liquido_x_contenedor = None
+
       if cantidad_de_liquido_en_contenedores_no_llenos.get():
-       cantidad_de_liquido_en_contenedores_no_llenos = int(cantidad_de_liquido_en_contenedores_no_llenos.get())
+       if unidad_de_medida != "Unidad de medida":
+        cantidad_de_liquido_en_contenedores_no_llenos = {"cantidad":float(
+         cantidad_de_liquido_en_contenedores_no_llenos.get()),
+         "unidad de medida":unidad_de_medida.get()}
+       else:
+        raise UEntryVacios()
       else:
        cantidad_de_liquido_en_contenedores_no_llenos = None
-      
+
+      if precio_del_liquido.get():
+       if unidad_de_medida != "Unidad de medida":
+        precio_del_liquido = {"cantidad":float(
+         precio_del_liquido.get()),
+         "unidad de medida":unidad_de_medida.get()}
+       else:
+        raise MEntryVacios()
+      else:
+       precio_del_liquido = None
+              
       if precio_del_contenedor.get():
-       precio_del_contenedor = precio_del_contenedor.get()
+       if unidad_de_medida != "Unidad de medida":
+        precio_del_contenedor = {"cantidad":float(
+         precio_del_contenedor.get()),
+         "unidad de medida":unidad_de_medida.get()}
+       else:
+        raise MEntryVacios()
       else:
        precio_del_contenedor = None
-      
-      if cantidad_de_contenedores_llenos.get():
-       cantidad_de_contenedores_llenos = cantidad_de_contenedores_llenos.get()
+       
+      if cantidad_de_liquido_total.get():
+       if unidad_de_medida != "Unidad de medida":
+        cantidad_de_liquido_total = {"cantidad":float(
+         cantidad_de_liquido_total.get()),
+         "unidad de medida":unidad_de_medida.get()}
+       else:
+        raise UEntryVacios()
       else:
-       raise EntryVacios()
-      
+       cantidad_de_liquido_total = None
+       
       orden["Agregar producto"] =  {"tipo":"Producto_liquido",nombre:{"nombre":nombre,
             "cantidad_de_contenedores_llenos":cantidad_de_contenedores_llenos,
-            "cantidad_de_liquido_x_contenedor":cantidad_de_liquido_x_contenedor_entry,
-            "peso_total_de_contenedores_no_llenos":cantidad_de_liquido_en_contenedores_no_llenos_entry,
-            "precio_por_peso_entry":precio_del_liquido_entry,
-            "precio_por_contenedor_entry":precio_del_contenedor,
-            "pesaje_total_del_producto_entry":cantidad_de_liquido_total_entry}}      
+            "cantidad_de_liquido_del_contenedor":cantidad_de_liquido_x_contenedor,
+            "cantidad_de_liquido_en_contenedores_no_llenos":cantidad_de_liquido_en_contenedores_no_llenos,
+            "precio_x_litros":precio_del_liquido,
+            "precio_x_contenedor":precio_del_contenedor,
+            "cantidad_liquido_total":cantidad_de_liquido_total}}
+             
 
-     
+    if tipo == "Producto_x_pesaje":
+     cantidad_de_contenedores_llenos = orden["Agregar producto"]["cantidad_de_contenedores_llenos"]
+     unidad_de_medida= orden["Agregar producto"]["unidad_de_medida"]
+     cantidad_de_liquido_x_contenedor = orden["Agregar producto"]["peso_del_contenedor"]
+     cantidad_de_liquido_en_contenedores_no_llenos = orden["Agregar producto"]\
+       ["peso_total_de_contenedores_no_llenos"]
+     precio_del_liquido = orden["Agregar producto"]["precio_x_pesaje"]
+     precio_del_contenedor= orden["Agregar producto"]["precio_por_contenedor"]
+     cantidad_de_liquido_total = orden["Agregar producto"]["pesaje_total_del_producto"]
+
+     if cantidad_de_contenedores_llenos.get():
+      cantidad_de_contenedores_llenos = int(cantidad_de_contenedores_llenos.get())
+     else:
+      raise EntryVacios()
+       
+     if peso_del_contenedor.get():
+      if unidad_de_medida != "Unidad de medida":
+       peso_del_contenedor = {"cantidad":float(
+        peso_del_contenedor.get()),
+        "unidad de medida":unidad_de_medida.get()}
+      else:
+       raise UEntryVacios()
+     else:
+      peso_del_contenedor = None
+
+     if peso_total_de_contenedores_no_llenos.get():
+      if unidad_de_medida != "Unidad de medida":
+       peso_total_de_contenedores_no_llenos = {"cantidad":float(
+        peso_total_de_contenedores_no_llenos.get()),
+        "unidad de medida":unidad_de_medida.get()}
+      else:
+       raise UEntryVacios()
+     else:
+      peso_total_de_contenedores_no_llenos = None
+
+     if precio_x_pesaje.get():
+      if unidad_de_medida != "Unidad de medida":
+       precio_del_liquido = {"cantidad":float(
+        precio_x_pesaje.get()),
+        "unidad de medida":unidad_de_medida.get()}
+      else:
+       raise MEntryVacios()
+     else:
+      precio_x_pesaje = None
+              
+     if precio_del_contenedor.get():
+      if unidad_de_medida != "Unidad de medida":
+       precio_del_contenedor = {"cantidad":float(
+        precio_del_contenedor.get()),
+        "unidad de medida":unidad_de_medida.get()}
+      else:
+       raise MEntryVacios()
+     else:
+      precio_del_contenedor = None
+       
+     if pesaje_total_del_producto.get():
+      if unidad_de_medida != "Unidad de medida":
+       pesaje_total_del_producto = {"cantidad":float(
+        pesaje_total_del_producto.get()),
+        "unidad de medida":unidad_de_medida.get()}
+      else:
+       raise UEntryVacios()
+     else:
+      cantidad_de_liquido_total = None
+       
+     orden["Agregar producto"] =  {"tipo":"Producto_x_pesaje",nombre:{"nombre":nombre,
+           "cantidad_de_contenedores_llenos":cantidad_de_contenedores_llenos,
+           "peso_del_contenedor":peso_del_contenedor,
+           "peso_total_de_contenedores_no_llenos":peso_total_de_contenedores_no_llenos,
+           "precio_x_pesaje":precio_x_pesaje,
+           "precio_x_contenedor":precio_del_contenedor,
+           "pesaje_total_del_producto":pesaje_total_del_producto}}
 
     if self.callback(orden) is True:
      messagebox.showinfo("Guardado Exitoso", "El producto a sido guardado exitosamente")
      self.__Regreso(self.Clasificator_Product)
     
-  except EntryVacios:messagebox.showerror("Error De Guardado", "El producto debe tener un nombre")
+  except EntryVacios:messagebox.showerror("Error De Guardado", "Se debe registrar un nombre y la cantidad de lotes del producto")
+  except ValueError:messagebox.showerror("Error De Guardado", "Excepto el nombre todo lo demas se debe registrar con numeros")
+  except MEntryVacios:messagebox.showerror("Error De Guardado", "Si se registro un precio, tambien se debe seleccionar el tipo de moneda")
+  except UEntryVacios:messagebox.showerror("Error De Guardado", "Se debe seleccionar el tipo de moneda")
 
 #metodos complejos
  def Principal_Windows(self):
@@ -217,8 +330,11 @@ class Ui():
    fila= 4
 
   elif num == 2:   
-   tipo_producto.set("Producto por Pesaje")
+   #estos son los valores que tendra el boton los valores de unidad de medida
+   valores = ["Unidad de medida","gramos","kilogramos","onzas","libras", "miligramos", "toneladas"]
 
+   tipo_producto.set("Producto por Pesaje")
+  
   #cantidad de contenedores 
    cantidad_de_contenedores_label= Label(self.frame_base,text="Cantidad de contenedores :")
    cantidad_de_contenedores_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
@@ -270,6 +386,9 @@ class Ui():
 
   else:  
    tipo_producto.set("Productos Liquidos")
+   #estos son los valores pque tendra el boton de unidad de medida
+   valores = ["Unidad de medida","mililitros","litros", "onzas líquidas"]
+
 
    #cantidad de liquido de cada contenedor lleno
    cantidad_de_liquido_x_contenedor_label= Label(self.frame_base,text="Cantidad de liquido por contenedor lleno :")
@@ -318,8 +437,8 @@ class Ui():
    precio_del_liquido_entry = Entry(self.frame_base)
    precio_del_liquido_entry.config(font=("Arial",15))
    precio_del_liquido_entry.grid(column=1,row=7,pady=10)
-
    fila = 8
+   
 
 #frase que identifica el tipo de producto
   frase_superior= Label(self.frame_base,textvariable= tipo_producto)
@@ -338,32 +457,39 @@ class Ui():
 
   #boton del tipo de moneda 
   values = ["Tipo de moneda","CUP","USD","MLC"]
-  tipo_de_moneda_buton = ttk.Combobox(self.frame_base,values=values)
+  tipo_de_moneda_buton = ttk.Combobox(self.frame_base,values=values,font=("Arial",15))
   tipo_de_moneda_buton.current(0)
-  tipo_de_moneda_buton.grid(column=2,row = fila)
-  
+  tipo_de_moneda_buton.grid(column=2,row = 1,padx=10)
+
+  #boton de unidades de medida solo para los productos pesajes y los liquidos
+  if num ==2 or num== 3:
+   unidad_de_medida_buton = ttk.Combobox(self.frame_base,values=valores,font=("Arial",15))
+   unidad_de_medida_buton.current(0)
+   unidad_de_medida_buton.grid(column=3,row=1,padx= 10)
 
   if num ==1:
    producto = {"tipo":"Productos_contables","nombre":name_entry,"cantidad":cantidad_entry,
-               "precio_x_unidad":precio_entry,"Moneda":tipo_de_moneda_buton}
+               "precio_x_unidad":precio_entry,"moneda":tipo_de_moneda_buton}
 
   elif num ==2:
    producto = {"tipo":"Producto_x_pesaje","nombre":name_entry,
                "cantidad_de_contenedores_llenos":cantidad_de_contenedores_entry,
                "peso_del_contenedor":peso_del_contenedor_entry,
                "peso_total_de_contenedores_no_llenos":pesaje_total_en_contenedores_no_llenos_entry,
-               "precio_por_peso_entry":precio_por_peso_entry,
-               "precio_por_contenedor_entry":precio_por_contenedor_entry,
-               "pesaje_total_del_producto_entry":pesaje_total_del_producto_entry}
+               "precio_x_pesaje":precio_por_peso_entry,
+               "precio_x_contenedor":precio_por_contenedor_entry,
+               "pesaje_total_del_producto":pesaje_total_del_producto_entry,
+               "moneda":tipo_de_moneda_buton,"unidad_de_medida":unidad_de_medida_buton}
 
   else:
    producto =  {"tipo":"Producto_liquido","nombre":name_entry,
                "cantidad_de_contenedores_llenos":cantidad_de_contenedores_llenos_entry,
                "cantidad_de_liquido_x_contenedor":cantidad_de_liquido_x_contenedor_entry,
-               "peso_total_de_contenedores_no_llenos":cantidad_de_liquido_en_contenedores_no_llenos_entry,
-               "precio_por_peso_entry":precio_del_liquido_entry,
-               "precio_por_contenedor_entry":precio_por_contenedor_entry,
-               "pesaje_total_del_producto_entry":cantidad_de_liquido_total_entry}
+               "cantidad_de_liquido_en_contenedores_no_llenos":cantidad_de_liquido_en_contenedores_no_llenos_entry,
+               "precio_del_liquido":precio_del_liquido_entry,
+               "precio_por_contenedor":precio_por_contenedor_entry,
+               "cantidad_de_liquido_total":cantidad_de_liquido_total_entry,
+               "moneda":tipo_de_moneda_buton,"unidad_de_medida":unidad_de_medida_buton}
 
   orden = {"Agregar producto":producto}      
   save_button.config(command=lambda : self.__Guardar(orden))

@@ -25,5 +25,13 @@
             "cantidad": 4,
             "precio_x_unidad": null
         }
+    },
+    {
+        "tipo": "Productos_contables",
+        "d": {
+            "nombre": "d",
+            "cantidad": 23,
+            "precio_x_unidad": null
+        }
     }
 ]

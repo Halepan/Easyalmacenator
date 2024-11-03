@@ -88,7 +88,7 @@ class Producto_x_pesaje(Productos):
   self.pesaje_total_del_producto = pesaje_total_del_producto
 
 
-  def dict(self):
+ def dict(self):
    """Devuelve un disccionario con los atributos del producto pesado."""
    datos = super().dict()
    datos["cantidad_de_contenedores_llenos"]=self.cantidad_de_contenedores_llenos
