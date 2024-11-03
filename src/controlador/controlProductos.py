@@ -25,21 +25,24 @@ def Save_archivo(productos):
 
 
 class Control():
-    def __init__(self,productos={}):
-        self.productos = productos
+  def __init__(self,productos={}):
+   self.productos = productos
 
-    def AggProductos (self,producto):
-        self.productos[producto.nombre] = producto
-        return Save_archivo(self.productos)
+  def AggProductos (self,producto):
+   self.productos[producto.nombre] = producto
+   return Save_archivo(self.productos)
     
-    def FindProduct(self,nombre):
-       if nombre in self.productos:
-          return self.productos[nombre]
-       else:
-          return None
+  def FindProduct(self,nombre):
+   if nombre in self.productos:
+      return self.productos[nombre]
+   else:
+      return None
 
-    def Look_list_product(self):
-        return self.productos
+  def Look_diccionary_product(self):
+   return self.productos
 
-    def Actualizacion(self,actual):
+  def Look_list_product(self):
+   productos= (self.productos.key())
+
+  def Actualizacion(self,actual):
         self.productos = actual
