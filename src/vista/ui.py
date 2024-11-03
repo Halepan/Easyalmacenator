@@ -1,7 +1,15 @@
-from tkinter import Tk,Label,Entry,Button,Frame,messagebox,StringVar
+from tkinter import Label,Entry,Button,Frame,messagebox,StringVar,ttk
 
 class EntryVacios(Exception):
- """excepcion personalizada para los entry vacios"""
+ """excepcion personalizada para los entry vacios de los atributos de los productos"""
+ pass
+
+class MEntryVacios(Exception):
+ """excepcion personalizada para los entry vacios de las monedas"""
+ pass
+
+class UEntryVacios(Exception):
+ """excepcion personalizada para los entry   vacios de unidades de medida"""
  pass
 
 class Ui():
@@ -47,13 +55,18 @@ class Ui():
      try:
       cantidad = orden["Agregar producto"]["cantidad"]
       precio =orden["Agregar producto"]["precio_x_unidad"]
+      moneda = orden["Agregar producto"]["Moneda"]
       if cantidad.get():
        cantidad = int(cantidad.get())
       else:
        raise EntryVacios()
       
       if precio.get():
-       precio = float(precio.get())
+       
+       if moneda.get() != "Tipo de moneda":
+        precio = {"cantidad":float(precio.get()),"tipo":moneda.get()}
+       else:
+        raise MEntryVacios()
       else:
        precio = None
  
@@ -62,6 +75,7 @@ class Ui():
 
      except EntryVacios:messagebox.showerror("Error De Guardado", "Se debe registrar la cantidad del producto")
      except ValueError:messagebox.showerror("Error De Guardado", "La cantidad y el precio deben ser numeros no letras")
+     except MEntryVacios:messagebox.showerror("Error De Guardado", "Si se registro un precio, tambien se debe seleccionar el tipo de moneda")
 
     if tipo == "Producto_liquido":
       cantidad_de_contenedores_llenos = orden["Agregar producto"]["cantidad_de_contenedores_llenos"]
@@ -322,9 +336,16 @@ class Ui():
   atras_button.config(bg="red",font=("Arial",15))
   atras_button.grid(column=1,row=fila,padx=10)
 
+  #boton del tipo de moneda 
+  values = ["Tipo de moneda","CUP","USD","MLC"]
+  tipo_de_moneda_buton = ttk.Combobox(self.frame_base,values=values)
+  tipo_de_moneda_buton.current(0)
+  tipo_de_moneda_buton.grid(column=2,row = fila)
+  
+
   if num ==1:
    producto = {"tipo":"Productos_contables","nombre":name_entry,"cantidad":cantidad_entry,
-               "precio_x_unidad":precio_entry}
+               "precio_x_unidad":precio_entry,"Moneda":tipo_de_moneda_buton}
 
   elif num ==2:
    producto = {"tipo":"Producto_x_pesaje","nombre":name_entry,
