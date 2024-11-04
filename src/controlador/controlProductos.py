@@ -42,7 +42,8 @@ class Control():
    return self.productos
 
   def Look_list_product(self):
-   productos= (self.productos.key())
+   productos= (self.productos.keys())
+   return productos
 
   def Actualizacion(self,actual):
         self.productos = actual

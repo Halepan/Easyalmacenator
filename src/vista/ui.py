@@ -230,6 +230,12 @@ class Ui():
   except MEntryVacios:messagebox.showerror("Error De Guardado", "Si se registro un precio, tambien se debe seleccionar el tipo de moneda")
   except UEntryVacios:messagebox.showerror("Error De Guardado", "Se debe seleccionar el tipo de moneda")
 
+ def __Find(self,event,nombre):
+  if nombre.get(): 
+   orden = {"Buscar producto":nombre.get()}
+   
+   nombre.config(values =self.callback(orden))
+
 #metodos complejos
  def Principal_Windows(self):
      #texto inicial
@@ -243,13 +249,13 @@ class Ui():
   agregar_productos.config(width="17",height="-2")
   agregar_productos.grid(column=0,row=1,ipady=5,ipadx=3,pady=10)
 
-  actualizar_productos= Button(self.frame_base,text="Actualizar Productos")
+  actualizar_productos= Button(self.frame_base,text="Actualizar Productos",command=lambda:self.Find_Product("Actualizar productos"))
   actualizar_productos.config(fg="white",bg="black",font=("Arial",25))
   actualizar_productos.config(width="18",height="-2")
   actualizar_productos.grid(column=0,row=2,pady=10)
     
     #boton de buscar cierto producto
-  look_producto = Button(self.frame_base,text="Buscar Productos")
+  look_producto = Button(self.frame_base,text="Buscar Productos",command=lambda:self.Find_Product("Mostrar productos"))
   look_producto.config(fg="white",bg="blue",font=("Arial",25))
   look_producto.config(width="18",height="-2")
   look_producto.grid(column=0,row=3,pady=10)
@@ -493,3 +499,19 @@ class Ui():
 
   orden = {"Agregar producto":producto}      
   save_button.config(command=lambda : self.__Guardar(orden))
+
+ def Find_Product(self,Nextaccion):
+  self.__Clear()
+  label_principal = Label(self.frame_base,text="Buscar Producto")
+  label_principal.config(fg="white",bg="#2E2E2E",font=("Arial",69))
+  label_principal.grid(column=0,row=0,columnspan=2,pady=20,padx=10)
+
+  barra_find = ttk.Combobox(self.frame_base,values=[],state="normal",font=("Arial",15))
+  barra_find.grid(column=0,row=1,padx=10,pady=20,columnspan=1)
+  barra_find.bind("<KeyRelease>",lambda event: self.__Find(event,barra_find))
+
+
+  button_atras=Button(self.frame_base,text="Regresar",
+    command=lambda: self.__Regreso(self.Principal_Windows))
+  button_atras.config(bg="red",fg="white")
+  button_atras.grid(column=1, row=2,pady=10)
