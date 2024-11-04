@@ -511,8 +511,12 @@ class Ui():
   barra_find.grid(column=0,row=1,padx=10,pady=20,columnspan=1)
   barra_find.bind("<KeyRelease>",lambda event: self.__Find(event,barra_find))
 
+  boton_Buscar = Button(self.frame,text="Buscar",
+    font=("Arial",12))
+  boton_Buscar.config(bg="blue",fg="white")
+  boton_Buscar.grid(column=2,row=1)
 
   button_atras=Button(self.frame_base,text="Regresar",
-    command=lambda: self.__Regreso(self.Principal_Windows))
+    font=("Arial",12),command=lambda: self.__Regreso(self.Principal_Windows))
   button_atras.config(bg="red",fg="white")
   button_atras.grid(column=1, row=2,pady=10)
