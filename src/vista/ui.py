@@ -233,8 +233,9 @@ class Ui():
  def __Find(self,event,nombre):
   if nombre.get(): 
    orden = {"Buscar producto":nombre.get()}
-   
-   nombre.config(values =self.callback(orden))
+   lista_recibida= self.callback(orden)
+   print(lista_recibida)
+   nombre.config(values = lista_recibida)
 
 #metodos complejos
  def Principal_Windows(self):

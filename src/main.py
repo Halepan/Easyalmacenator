@@ -27,8 +27,6 @@ def funcion_auxiliar_del_main(orden):
    nombres = str(nombres)
    if nombre in nombres:
     values_return.append(nombres)
-   else:
-    return None
   return values_return
  return True
 
