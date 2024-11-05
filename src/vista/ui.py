@@ -505,16 +505,16 @@ class Ui():
   self.__Clear()
   label_principal = Label(self.frame_base,text="Buscar Producto")
   label_principal.config(fg="white",bg="#2E2E2E",font=("Arial",69))
-  label_principal.grid(column=0,row=0,columnspan=2,pady=20,padx=10)
+  label_principal.grid(column=0,row=0,pady=20)
 
   barra_find = ttk.Combobox(self.frame_base,values=[],state="normal",font=("Arial",15))
-  barra_find.grid(column=0,row=1,padx=10,pady=20,columnspan=1)
+  barra_find.grid(column=0,row=1,padx=5,pady=10)
   barra_find.bind("<KeyRelease>",lambda event: self.__Find(event,barra_find))
 
-  boton_Buscar = Button(self.frame,text="Buscar",
+  boton_Buscar = Button(self.frame_base,text="Buscar",
     font=("Arial",12))
   boton_Buscar.config(bg="blue",fg="white")
-  boton_Buscar.grid(column=2,row=1)
+  boton_Buscar.grid(column=1,row=1,padx=5)
 
   button_atras=Button(self.frame_base,text="Regresar",
     font=("Arial",12),command=lambda: self.__Regreso(self.Principal_Windows))
