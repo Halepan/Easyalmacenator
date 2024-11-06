@@ -18,9 +18,9 @@ def funcion_auxiliar_del_main(orden):
   else:
    print("error")
    return False
- elif "Buscar producto" in orden:
+ elif "Buscar nombres producto" in orden:
   values_return=[]
-  nombre = orden["Buscar producto"]
+  nombre = orden["Buscar nombres producto"]
   lista_nombres= control.Look_list_product()
   
   for nombres in lista_nombres:
@@ -28,6 +28,13 @@ def funcion_auxiliar_del_main(orden):
    if nombre in nombres:
     values_return.append(nombres)
   return values_return
+ elif "Buscar productos":
+  nombre = orden["Buscar productos"]
+  producto = control.FindProduct(nombre)
+  if producto:
+   return producto
+  else:
+   return False
  return True
 
 

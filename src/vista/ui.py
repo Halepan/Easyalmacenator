@@ -230,12 +230,31 @@ class Ui():
   except MEntryVacios:messagebox.showerror("Error De Guardado", "Si se registro un precio, tambien se debe seleccionar el tipo de moneda")
   except UEntryVacios:messagebox.showerror("Error De Guardado", "Se debe seleccionar el tipo de moneda")
 
- def __Find(self,event,nombre):
+ def __Findlistcoincidence(self,event,nombre):
   if nombre.get(): 
-   orden = {"Buscar producto":nombre.get()}
+   orden = {"Buscar nombres producto":nombre.get()}
    lista_recibida= self.callback(orden)
    print(lista_recibida)
    nombre.config(values = lista_recibida)
+
+ def __FindAction(self,orden):
+  try:
+   clave = orden.keys()
+   nombre = orden["Actualizar productos"] or ["Mostrar productos"]
+   nombre = nombre.get()
+   print(nombre)
+   product = self.callback({"Buscar productos":nombre})
+   if product:
+    match clave:
+     case "Actualizar productos":
+      self.Actualizar_product(product)
+     case "Mostrar productos":
+      self.Mostrar_product(product)
+   else:
+    raise ValueError()
+  except ValueError:messagebox.showerror("ERROR DE BUSQUEDA","Al buscar uno de los productos selecciona uno de los productos de la\
+  lista para facilitar la busqueda de los productos")
+  
 
 #metodos complejos
  def Principal_Windows(self):
@@ -256,7 +275,7 @@ class Ui():
   actualizar_productos.grid(column=0,row=2,pady=10)
     
     #boton de buscar cierto producto
-  look_producto = Button(self.frame_base,text="Buscar Productos",command=lambda:self.Find_Product("Mostrar productos"))
+  look_producto = Button(self.frame_base,text="Mostrar Productos",command=lambda:self.Find_Product("Mostrar productos"))
   look_producto.config(fg="white",bg="blue",font=("Arial",25))
   look_producto.config(width="18",height="-2")
   look_producto.grid(column=0,row=3,pady=10)
@@ -272,8 +291,7 @@ class Ui():
   salir.grid(column=0,row=5,pady=10)
 
  def Clasificator_Product(self):
-
-
+  
   borrar = self.__Clear()
   frase_superior= Label(self.frame_base,text= "Nuevo Producto")
   frase_superior.config(bg="#2E2E2E",fg= "white",font=("Arial",79))
@@ -508,11 +526,11 @@ class Ui():
   label_principal.grid(column=0,row=0,pady=20)
 
   barra_find = ttk.Combobox(self.frame_base,values=[],state="normal",font=("Arial",15))
-  barra_find.grid(column=0,row=1,padx=5,pady=10)
-  barra_find.bind("<KeyRelease>",lambda event: self.__Find(event,barra_find))
+  barra_find.grid(column=0,row=1,padx=5,pady=10,sticky="e")
+  barra_find.bind("<KeyRelease>",lambda event: self.__Findlistcoincidence(event,barra_find))
 
   boton_Buscar = Button(self.frame_base,text="Buscar",
-    font=("Arial",12))
+    font=("Arial",12),command=lambda: self.__FindAction(orden = {Nextaccion:barra_find}))
   boton_Buscar.config(bg="blue",fg="white")
   boton_Buscar.grid(column=1,row=1,padx=5)
 
@@ -520,3 +538,9 @@ class Ui():
     font=("Arial",12),command=lambda: self.__Regreso(self.Principal_Windows))
   button_atras.config(bg="red",fg="white")
   button_atras.grid(column=1, row=2,pady=10)
+
+ def Actualizar_product(self,product):
+  pass
+
+ def Mostrar_product(self,product):
+  pass
