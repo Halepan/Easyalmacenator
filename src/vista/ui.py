@@ -21,9 +21,9 @@ class Ui():
   self.root.title("ALMACEN DE PRODUCTOS")
   self.root.config(bg=self.color_fond)
 
-  self.frame_base = Frame(width= self.anch, height=self.altura)
+  self.frame_base = Frame(self.root,width= self.anch, height=self.altura)
   self.frame_base.config( bg=self.color_fond)
-  self.frame_base.pack()
+  self.frame_base.grid(column=0,row=0)
 
   self.callback = callback
 
@@ -234,21 +234,17 @@ class Ui():
   if nombre.get(): 
    orden = {"Buscar nombres producto":nombre.get()}
    lista_recibida= self.callback(orden)
-   print(lista_recibida)
    nombre.config(values = lista_recibida)
 
  def __FindAction(self,orden):
   try:
-   clave = orden.keys()
    nombre = orden["Actualizar productos"] or ["Mostrar productos"]
    nombre = nombre.get()
-   print(nombre)
    product = self.callback({"Buscar productos":nombre})
    if product:
-    match clave:
-     case "Actualizar productos":
+    if "Actualizar productos" in orden:
       self.Actualizar_product(product)
-     case "Mostrar productos":
+    elif "Mostrar productos"in orden:
       self.Mostrar_product(product)
    else:
     raise ValueError()
@@ -321,148 +317,155 @@ class Ui():
   buton_back.config(width="17",height="-2")
   buton_back.grid(column=1,row=2,ipady=5,ipadx=3,pady=10,padx=10)
 
- def New_producto(self,num):
+ def New_producto(self,num,product= None):
 
   tipo_producto = StringVar()
   self.__Clear()
-
-  #nombre
+  if product:
+   diccionary = product.dict()
+   nom = StringVar()
+   nom.set(diccionary["nombre"])
+   name_entry = Label(self.frame_base,text=nom.get())
+   name_entry.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+   name_entry.grid(column=1,row=1,pady=10,padx=0)
+  else:
+   #nombre
+   name_entry = Entry(self.frame_base)
+   name_entry.config(font=("Arial",15))
+   name_entry.grid(column=1,row=1,pady=10,padx=0)
   name_label = Label(self.frame_base,text="Nombre del producto :")
   name_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
   name_label.grid(column=0,row=1,pady=10,padx=0)
-  name_entry = Entry(self.frame_base)
-  name_entry.config(font=("Arial",15))
-  name_entry.grid(column=1,row=1,pady=10,padx=0)
-
-  if num ==1:
-   tipo_producto.set("Producto Contable")
-
-   #cantidad
-   cantidad_label= Label(self.frame_base,text="Cantidad :")
-   cantidad_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   cantidad_label.grid(column=0,row=2,pady=10)
-   cantidad_entry = Entry(self.frame_base)
-   cantidad_entry.config(font=("Arial",15))
-   cantidad_entry.grid(column=1,row=2,pady=10)
-
-   #Precio
-   precio_label= Label(self.frame_base,text="Precio por producto :")
-   precio_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   precio_label.grid(column=0,row=3,pady=10)
-   precio_entry = Entry(self.frame_base)
-   precio_entry.config(font=("Arial",15))
-   precio_entry.grid(column=1,row=3,pady=10)
-   fila= 4
-
-  elif num == 2:   
-   #estos son los valores que tendra el boton los valores de unidad de medida
-   valores = ["Unidad de medida","gramos","kilogramos","onzas","libras", "miligramos", "toneladas"]
-
-   tipo_producto.set("Producto por Pesaje")
   
-  #cantidad de contenedores 
-   cantidad_de_contenedores_label= Label(self.frame_base,text="Cantidad de contenedores :")
-   cantidad_de_contenedores_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   cantidad_de_contenedores_label.grid(column=0,row=2,pady=10)
-   cantidad_de_contenedores_entry = Entry(self.frame_base)
-   cantidad_de_contenedores_entry.config(font=("Arial",15))
-   cantidad_de_contenedores_entry.grid(column=1,row=2,pady=10)
+  match num:
+   case 1:
+    tipo_producto.set("Producto Contable")
 
-   #peso de contenedor 
-   peso_del_contenedor_label= Label(self.frame_base,text="peso del contenedor :")
-   peso_del_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   peso_del_contenedor_label.grid(column=0,row=3,pady=10)
-   peso_del_contenedor_entry = Entry(self.frame_base)
-   peso_del_contenedor_entry.config(font=("Arial",15))
-   peso_del_contenedor_entry.grid(column=1,row=3,pady=10)
+    #cantidad
+    cantidad_label= Label(self.frame_base,text="Cantidad :")
+    cantidad_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_label.grid(column=0,row=2,pady=10)
+    cantidad_entry = Entry(self.frame_base)
+    cantidad_entry.config(font=("Arial",15))
+    cantidad_entry.grid(column=1,row=2,pady=10)
 
-   #pesaje_total_en_contenedores_no_llenos
-   pesaje_total_en_contenedores_no_llenos_label= Label(self.frame_base,text="pesaje total de los contenedores no llenos :")
-   pesaje_total_en_contenedores_no_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   pesaje_total_en_contenedores_no_llenos_label.grid(column=0,row=4,pady=10)
-   pesaje_total_en_contenedores_no_llenos_entry = Entry(self.frame_base)
-   pesaje_total_en_contenedores_no_llenos_entry.config(font=("Arial",15))
-   pesaje_total_en_contenedores_no_llenos_entry.grid(column=1,row=4,pady=10)
+    #Precio
+    precio_label= Label(self.frame_base,text="Precio por producto :")
+    precio_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_label.grid(column=0,row=3,pady=10)
+    precio_entry = Entry(self.frame_base)
+    precio_entry.config(font=("Arial",15))
+    precio_entry.grid(column=1,row=3,pady=10)
+    fila= 4
+
+   case 2:   
+    #estos son los valores que tendra el boton los valores de unidad de medida
+    valores = ["Unidad de medida","gramos","kilogramos","onzas","libras", "miligramos", "toneladas"]
+
+    tipo_producto.set("Producto por Pesaje")
+  
+   #cantidad de contenedores 
+    cantidad_de_contenedores_label= Label(self.frame_base,text="Cantidad de contenedores :")
+    cantidad_de_contenedores_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_contenedores_label.grid(column=0,row=2,pady=10)
+    cantidad_de_contenedores_entry = Entry(self.frame_base)
+    cantidad_de_contenedores_entry.config(font=("Arial",15))
+    cantidad_de_contenedores_entry.grid(column=1,row=2,pady=10)
+
+    #peso de contenedor 
+    peso_del_contenedor_label= Label(self.frame_base,text="peso del contenedor :")
+    peso_del_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    peso_del_contenedor_label.grid(column=0,row=3,pady=10)
+    peso_del_contenedor_entry = Entry(self.frame_base)
+    peso_del_contenedor_entry.config(font=("Arial",15))
+    peso_del_contenedor_entry.grid(column=1,row=3,pady=10)
+
+    #pesaje_total_en_contenedores_no_llenos
+    pesaje_total_en_contenedores_no_llenos_label= Label(self.frame_base,text="pesaje total de los contenedores no llenos :")
+    pesaje_total_en_contenedores_no_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    pesaje_total_en_contenedores_no_llenos_label.grid(column=0,row=4,pady=10)
+    pesaje_total_en_contenedores_no_llenos_entry = Entry(self.frame_base)
+    pesaje_total_en_contenedores_no_llenos_entry.config(font=("Arial",15))
+    pesaje_total_en_contenedores_no_llenos_entry.grid(column=1,row=4,pady=10)
    
    #pesaje_total_del_producto 
-   pesaje_total_del_producto_label= Label(self.frame_base,text="pesaje total del producto :")
-   pesaje_total_del_producto_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   pesaje_total_del_producto_label.grid(column=0,row=5,pady=10)
-   pesaje_total_del_producto_entry = Entry(self.frame_base)
-   pesaje_total_del_producto_entry.config(font=("Arial",15))
-   pesaje_total_del_producto_entry.grid(column=1,row=5,pady=10)            
+    pesaje_total_del_producto_label= Label(self.frame_base,text="pesaje total del producto :")
+    pesaje_total_del_producto_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    pesaje_total_del_producto_label.grid(column=0,row=5,pady=10)
+    pesaje_total_del_producto_entry = Entry(self.frame_base)
+    pesaje_total_del_producto_entry.config(font=("Arial",15))
+    pesaje_total_del_producto_entry.grid(column=1,row=5,pady=10)            
 
-  #precio_por_peso 
-   precio_por_peso_label= Label(self.frame_base,text="precio por pesaje :")
-   precio_por_peso_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   precio_por_peso_label.grid(column=0,row=6,pady=10)
-   precio_por_peso_entry = Entry(self.frame_base)
-   precio_por_peso_entry.config(font=("Arial",15))
-   precio_por_peso_entry.grid(column=1,row=6,pady=10)
+   #precio_por_peso 
+    precio_por_peso_label= Label(self.frame_base,text="precio por pesaje :")
+    precio_por_peso_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_por_peso_label.grid(column=0,row=6,pady=10)
+    precio_por_peso_entry = Entry(self.frame_base)
+    precio_por_peso_entry.config(font=("Arial",15))
+    precio_por_peso_entry.grid(column=1,row=6,pady=10)
 
-   #precio_por_contenedor
-   precio_por_contenedor_label= Label(self.frame_base,text="precio por contenedor :")
-   precio_por_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   precio_por_contenedor_label.grid(column=0,row=7,pady=10)
-   precio_por_contenedor_entry = Entry(self.frame_base)
-   precio_por_contenedor_entry.config(font=("Arial",15))
-   precio_por_contenedor_entry.grid(column=1,row=7,pady=10)            
-   fila = 8
+    #precio_por_contenedor
+    precio_por_contenedor_label= Label(self.frame_base,text="precio por contenedor :")
+    precio_por_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_por_contenedor_label.grid(column=0,row=7,pady=10)
+    precio_por_contenedor_entry = Entry(self.frame_base)
+    precio_por_contenedor_entry.config(font=("Arial",15))
+    precio_por_contenedor_entry.grid(column=1,row=7,pady=10)            
+    fila = 8
 
-  else:  
-   tipo_producto.set("Productos Liquidos")
-   #estos son los valores pque tendra el boton de unidad de medida
-   valores = ["Unidad de medida","mililitros","litros", "onzas líquidas"]
+   case 3:  
+    tipo_producto.set("Productos Liquidos")
+    #estos son los valores pque tendra el boton de unidad de medida
+    valores = ["Unidad de medida","mililitros","litros", "onzas líquidas"]
 
-
-   #cantidad de liquido de cada contenedor lleno
-   cantidad_de_liquido_x_contenedor_label= Label(self.frame_base,text="Cantidad de liquido por contenedor lleno :")
-   cantidad_de_liquido_x_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   cantidad_de_liquido_x_contenedor_label.grid(column=0,row=2,pady=10)
-   cantidad_de_liquido_x_contenedor_entry = Entry(self.frame_base)
-   cantidad_de_liquido_x_contenedor_entry.config(font=("Arial",15))
-   cantidad_de_liquido_x_contenedor_entry.grid(column=1,row=2,pady=10)
+    #cantidad de liquido de cada contenedor lleno
+    cantidad_de_liquido_x_contenedor_label= Label(self.frame_base,text="Cantidad de liquido por contenedor lleno :")
+    cantidad_de_liquido_x_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_liquido_x_contenedor_label.grid(column=0,row=2,pady=10)
+    cantidad_de_liquido_x_contenedor_entry = Entry(self.frame_base)
+    cantidad_de_liquido_x_contenedor_entry.config(font=("Arial",15))
+    cantidad_de_liquido_x_contenedor_entry.grid(column=1,row=2,pady=10)
 
     #cantidad de contenedores llenos
-   cantidad_de_contenedores_llenos_label= Label(self.frame_base,text="Cantidad de contenedores llenos :")
-   cantidad_de_contenedores_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   cantidad_de_contenedores_llenos_label.grid(column=0,row=3,pady=10)
-   cantidad_de_contenedores_llenos_entry = Entry(self.frame_base)
-   cantidad_de_contenedores_llenos_entry.config(font=("Arial",15))
-   cantidad_de_contenedores_llenos_entry.grid(column=1,row=3,pady=10)
+    cantidad_de_contenedores_llenos_label= Label(self.frame_base,text="Cantidad de contenedores llenos :")
+    cantidad_de_contenedores_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_contenedores_llenos_label.grid(column=0,row=3,pady=10)
+    cantidad_de_contenedores_llenos_entry = Entry(self.frame_base)
+    cantidad_de_contenedores_llenos_entry.config(font=("Arial",15))
+    cantidad_de_contenedores_llenos_entry.grid(column=1,row=3,pady=10)
 
-   #cantidad de liquido en otros contenedores no llenos
-   cantidad_de_liquido_en_contenedores_no_llenos_label= Label(self.frame_base,text="Cantidad de liquido en otros contenedores no llenos :")
-   cantidad_de_liquido_en_contenedores_no_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   cantidad_de_liquido_en_contenedores_no_llenos_label.grid(column=0,row=4,pady=10)
-   cantidad_de_liquido_en_contenedores_no_llenos_entry = Entry(self.frame_base)
-   cantidad_de_liquido_en_contenedores_no_llenos_entry.config(font=("Arial",15))
-   cantidad_de_liquido_en_contenedores_no_llenos_entry.grid(column=1,row=4,pady=10)
+    #cantidad de liquido en otros contenedores no llenos
+    cantidad_de_liquido_en_contenedores_no_llenos_label= Label(self.frame_base,text="Cantidad de liquido en otros contenedores no llenos :")
+    cantidad_de_liquido_en_contenedores_no_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_liquido_en_contenedores_no_llenos_label.grid(column=0,row=4,pady=10)
+    cantidad_de_liquido_en_contenedores_no_llenos_entry = Entry(self.frame_base)
+    cantidad_de_liquido_en_contenedores_no_llenos_entry.config(font=("Arial",15))
+    cantidad_de_liquido_en_contenedores_no_llenos_entry.grid(column=1,row=4,pady=10)
    
-   #cantidad de liqido total
-   cantidad_de_liquido_total_label= Label(self.frame_base,text="Cantidad de liquido total :")
-   cantidad_de_liquido_total_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   cantidad_de_liquido_total_label.grid(column=0,row=5,pady=10)
-   cantidad_de_liquido_total_entry = Entry(self.frame_base)
-   cantidad_de_liquido_total_entry.config(font=("Arial",15))
-   cantidad_de_liquido_total_entry.grid(column=1,row=5,pady=10)
+    #cantidad de liqido total
+    cantidad_de_liquido_total_label= Label(self.frame_base,text="Cantidad de liquido total :")
+    cantidad_de_liquido_total_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_liquido_total_label.grid(column=0,row=5,pady=10)
+    cantidad_de_liquido_total_entry = Entry(self.frame_base)
+    cantidad_de_liquido_total_entry.config(font=("Arial",15))
+    cantidad_de_liquido_total_entry.grid(column=1,row=5,pady=10)
 
    #precio del liquido
-   precio_por_contenedor_label= Label(self.frame_base,text="Precio por contenedor lleno :")
-   precio_por_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   precio_por_contenedor_label.grid(column=0,row=6,pady=10)
-   precio_por_contenedor_entry = Entry(self.frame_base)
-   precio_por_contenedor_entry.config(font=("Arial",15))
-   precio_por_contenedor_entry.grid(column=1,row=6,pady=10)
+    precio_por_contenedor_label= Label(self.frame_base,text="Precio por contenedor lleno :")
+    precio_por_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_por_contenedor_label.grid(column=0,row=6,pady=10)
+    precio_por_contenedor_entry = Entry(self.frame_base)
+    precio_por_contenedor_entry.config(font=("Arial",15))
+    precio_por_contenedor_entry.grid(column=1,row=6,pady=10)
 
-   #Precio por liquido
-   precio_del_liquido_label= Label(self.frame_base,text="Precio del liquido :")
-   precio_del_liquido_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
-   precio_del_liquido_label.grid(column=0,row=7,pady=10)
-   precio_del_liquido_entry = Entry(self.frame_base)
-   precio_del_liquido_entry.config(font=("Arial",15))
-   precio_del_liquido_entry.grid(column=1,row=7,pady=10)
-   fila = 8
+    #Precio por liquido
+    precio_del_liquido_label= Label(self.frame_base,text="Precio del liquido :")
+    precio_del_liquido_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_del_liquido_label.grid(column=0,row=7,pady=10)
+    precio_del_liquido_entry = Entry(self.frame_base)
+    precio_del_liquido_entry.config(font=("Arial",15))
+    precio_del_liquido_entry.grid(column=1,row=7,pady=10)
+    fila = 8
    
 
 #frase que identifica el tipo de producto
@@ -540,7 +543,16 @@ class Ui():
   button_atras.grid(column=1, row=2,pady=10)
 
  def Actualizar_product(self,product):
-  pass
+  num = self.callback({"Tipo de productos":product})
+  self.New_producto(num,product)
 
  def Mostrar_product(self,product):
-  pass
+  diccionary = product.dict()
+  nombre = StringVar()
+  nombre.set(diccionary["nombre"])
+  if fram:
+   pass
+  else:
+   fram = self.frame_base
+  nom_label = Label(fram,textvariable= nombre.get())
+  nom_label.grid(column=0,row=0)

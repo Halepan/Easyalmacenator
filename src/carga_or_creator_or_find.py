@@ -176,3 +176,10 @@ def Load_archivo():
  except json.JSONDecodeError: print("Error al decodificar el archivo Json")
  except TypeError:print(TypeError)
 
+def Tipo_product(product):
+ if isinstance(product,Productos_contables):
+   return 1
+ elif isinstance(product,Producto_x_pesaje):
+   return 2
+ elif isinstance(product,Producto_liquido):
+   return 3

@@ -1,9 +1,6 @@
-from controlador.models.productos import Productos_contables,Producto_x_pesaje,Producto_liquido
-from controlador.models.moneda import Moneda
-from controlador.models.unidadadMedida import Unidades_Medida
 from controlador.controlProductos import Control
 from vista.ui import Ui
-from carga_or_creator_or_find import Creator_Productos,Load_archivo
+from carga_or_creator_or_find import Creator_Productos,Load_archivo,Tipo_product
 from tkinter import Tk
 
 def funcion_auxiliar_del_main(orden):
@@ -11,13 +8,13 @@ def funcion_auxiliar_del_main(orden):
  control = Control(carga)
  if "Agregar producto" in orden:
   producto = orden["Agregar producto"]
-  print(producto)
   producto = Creator_Productos(producto)
   if producto:
    control.AggProductos(producto)
   else:
    print("error")
    return False
+  
  elif "Buscar nombres producto" in orden:
   values_return=[]
   nombre = orden["Buscar nombres producto"]
@@ -28,13 +25,18 @@ def funcion_auxiliar_del_main(orden):
    if nombre in nombres:
     values_return.append(nombres)
   return values_return
- elif "Buscar productos":
+ 
+ elif "Buscar productos" in orden:
   nombre = orden["Buscar productos"]
   producto = control.FindProduct(nombre)
   if producto:
    return producto
   else:
    return False
+  
+ elif "Tipo de productos" in orden:
+  product = orden["Tipo de productos"]
+  return Tipo_product(product)
  return True
 
 
