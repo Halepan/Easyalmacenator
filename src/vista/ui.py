@@ -23,7 +23,7 @@ class Ui():
 
   self.frame_base = Frame(self.root,width= self.anch, height=self.altura)
   self.frame_base.config( bg=self.color_fond)
-  self.frame_base.grid(column=0,row=0)
+  self.frame_base.pack()
 
   self.callback = callback
 
@@ -151,12 +151,12 @@ class Ui():
     if tipo == "Producto_x_pesaje":
      cantidad_de_contenedores_llenos = orden["Agregar producto"]["cantidad_de_contenedores_llenos"]
      unidad_de_medida= orden["Agregar producto"]["unidad_de_medida"]
-     cantidad_de_liquido_x_contenedor = orden["Agregar producto"]["peso_del_contenedor"]
-     cantidad_de_liquido_en_contenedores_no_llenos = orden["Agregar producto"]\
+     peso_del_contenedor = orden["Agregar producto"]["peso_del_contenedor"]
+     peso_total_de_contenedores_no_llenos = orden["Agregar producto"]\
        ["peso_total_de_contenedores_no_llenos"]
-     precio_del_liquido = orden["Agregar producto"]["precio_x_pesaje"]
-     precio_del_contenedor= orden["Agregar producto"]["precio_por_contenedor"]
-     cantidad_de_liquido_total = orden["Agregar producto"]["pesaje_total_del_producto"]
+     precio_x_pesaje = orden["Agregar producto"]["precio_x_pesaje"]
+     precio_del_contenedor= orden["Agregar producto"]["precio_x_contenedor"]
+     pesaje_total_del_producto = orden["Agregar producto"]["pesaje_total_del_producto"]
 
      if cantidad_de_contenedores_llenos.get():
       cantidad_de_contenedores_llenos = int(cantidad_de_contenedores_llenos.get())
@@ -211,7 +211,7 @@ class Ui():
       else:
        raise UEntryVacios()
      else:
-      cantidad_de_liquido_total = None
+      pesaje_total_del_producto = None
        
      orden["Agregar producto"] =  {"tipo":"Producto_x_pesaje",nombre:{"nombre":nombre,
            "cantidad_de_contenedores_llenos":cantidad_de_contenedores_llenos,
@@ -322,13 +322,35 @@ class Ui():
   tipo_producto = StringVar()
   self.__Clear()
   if product:
+   atras = lambda: self.Find_Product("Actualizar productos")
    diccionary = product.dict()
    nom = StringVar()
    nom.set(diccionary["nombre"])
    name_entry = Label(self.frame_base,text=nom.get())
    name_entry.config(font=("Arial",25),bg="#2E2E2E",fg="white")
    name_entry.grid(column=1,row=1,pady=10,padx=0)
+   match num:
+    case 1 :
+     varcant = StringVar()
+     varprecio = StringVar()
+     varcant.set(diccionary["cantidad"])
+
+     if diccionary["precio_x_unidad"]:
+      varprecio.set(f"{diccionary["precio_x_unidad"]["cantidad"]} {diccionary["precio_x_unidad"]["tipo"]}")
+     else:
+      varprecio.set("no se conoce su precio")
+
+     mostrar_cant = Label(self.frame_base,text=varcant.get())
+     mostrar_cant.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     mostrar_cant.grid(column=2,row=2,pady=10,padx=0)
+     
+     mostrar_precio = Label(self.frame_base,text=varprecio.get())
+     mostrar_precio.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     mostrar_precio.grid(column=2,row=3,pady=10,padx=0)
+    case 2:
+     pass
   else:
+   atras = self.Clasificator_Product
    #nombre
    name_entry = Entry(self.frame_base)
    name_entry.config(font=("Arial",15))
@@ -479,7 +501,7 @@ class Ui():
   save_button.grid(column=0,row=fila,padx=10)
 
   #boton regresar
-  atras_button = Button(self.frame_base,text = "Regresar",command=lambda:self.__Regreso(self.Clasificator_Product))
+  atras_button = Button(self.frame_base,text = "Regresar",command=lambda:self.__Regreso(atras))
   atras_button.config(bg="red",font=("Arial",15))
   atras_button.grid(column=1,row=fila,padx=10)
 
