@@ -46,4 +46,5 @@ class Control():
    return productos
 
   def Actualizacion(self,actual):
-        self.productos = actual
+        self.productos[actual.nombre] = actual
+        return Save_archivo(self.productos)

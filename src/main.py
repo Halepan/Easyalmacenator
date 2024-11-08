@@ -1,9 +1,9 @@
 from controlador.controlProductos import Control
 from vista.ui import Ui
-from carga_or_creator_or_find import Creator_Productos,Load_archivo,Tipo_product
+from carga_or_creator_or_find import Creator_Productos,Load_archivo,Tipo_product,Sobreescribir_product
 from tkinter import Tk
 
-def funcion_auxiliar_del_main(orden):
+def funcion_auxiliar_del_main(orden,productorigin = None):
  carga = Load_archivo()
  control = Control(carga)
  if "Agregar producto" in orden:
@@ -37,8 +37,16 @@ def funcion_auxiliar_del_main(orden):
  elif "Tipo de productos" in orden:
   product = orden["Tipo de productos"]
   return Tipo_product(product)
+ 
+ elif "Actualizar productos" in orden:
+  producto = orden["Actualizar productos"]
+  producto = Creator_Productos(producto)
+  producto = Sobreescribir_product(productorigin,producto)
+  if producto:
+   control.Actualizacion(producto)
+  else:
+   print("error")
  return True
-
 
 root = Tk()
 app = Ui(root,funcion_auxiliar_del_main)

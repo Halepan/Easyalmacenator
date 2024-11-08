@@ -40,12 +40,12 @@ class Ui():
   self.__Clear()
   ejecutar = window()
 
- def __Guardar(self,orden):
+ def __Guardar(self,orden,key,producto):
   try:
-   if "Agregar producto" in orden:
-    tipo = orden["Agregar producto"]["tipo"]
-    nombre = orden["Agregar producto"]["nombre"]
-    moneda = orden["Agregar producto"]["moneda"]
+   if key in orden:
+    tipo = orden[key]["tipo"]
+    nombre = orden[key]["nombre"]
+    moneda = orden[key]["moneda"]
 
     if nombre.get():
      nombre = str(nombre.get())
@@ -53,13 +53,16 @@ class Ui():
      raise EntryVacios()
 
     if tipo == "Productos_contables":
-     cantidad = orden["Agregar producto"]["cantidad"]
-     precio =orden["Agregar producto"]["precio_x_unidad"]
+     cantidad = orden[key]["cantidad"]
+     precio = orden[key]["precio_x_unidad"]
      if cantidad.get():
       cantidad = int(cantidad.get())
      else:
-      raise EntryVacios()
-     
+      if key == "Agregar producto":
+       raise EntryVacios()
+      else:
+       cantidad = None
+
      if precio.get():  
       if moneda.get() != "Tipo de moneda":
        precio = {"cantidad":float(precio.get()),"tipo":moneda.get()}
@@ -68,25 +71,28 @@ class Ui():
      else:
       precio = None
 
-     orden["Agregar producto"] = {"tipo":tipo,nombre:{'nombre':nombre,'cantidad':cantidad,
+     orden[key] = {"tipo":tipo,nombre:{'nombre':nombre,'cantidad':cantidad,
             'precio_x_unidad':precio}}
 
 
     if tipo == "Producto_liquido":
      
-      cantidad_de_contenedores_llenos = orden["Agregar producto"]["cantidad_de_contenedores_llenos"]
-      unidad_de_medida= orden["Agregar producto"]["unidad_de_medida"]
-      cantidad_de_liquido_x_contenedor = orden["Agregar producto"]["cantidad_de_liquido_x_contenedor"]
-      cantidad_de_liquido_en_contenedores_no_llenos = orden["Agregar producto"]\
+      cantidad_de_contenedores_llenos = orden[key]["cantidad_de_contenedores_llenos"]
+      unidad_de_medida= orden[key]["unidad_de_medida"]
+      cantidad_de_liquido_x_contenedor = orden[key]["cantidad_de_liquido_x_contenedor"]
+      cantidad_de_liquido_en_contenedores_no_llenos = orden[key]\
         ["cantidad_de_liquido_en_contenedores_no_llenos"]
-      precio_del_liquido = orden["Agregar producto"]["precio_del_liquido"]
-      precio_del_contenedor= orden["Agregar producto"]["precio_por_contenedor"]
-      cantidad_de_liquido_total = orden["Agregar producto"]["cantidad_de_liquido_total"]
+      precio_del_liquido = orden[key]["precio_del_liquido"]
+      precio_del_contenedor= orden[key]["precio_por_contenedor"]
+      cantidad_de_liquido_total = orden[key]["cantidad_de_liquido_total"]
 
       if cantidad_de_contenedores_llenos.get():
        cantidad_de_contenedores_llenos = int(cantidad_de_contenedores_llenos.get())
       else:
-       raise EntryVacios()
+       if key == "Agregar producto":
+        raise EntryVacios()
+       else:
+        cantidad_de_contenedores_llenos = None
        
       if cantidad_de_liquido_x_contenedor.get():
        if unidad_de_medida.get() != "Unidad de medida":
@@ -138,7 +144,7 @@ class Ui():
       else:
        cantidad_de_liquido_total = None
        
-      orden["Agregar producto"] =  {"tipo":"Producto_liquido",nombre:{"nombre":nombre,
+      orden[key] =  {"tipo":"Producto_liquido",nombre:{"nombre":nombre,
             "cantidad_de_contenedores_llenos":cantidad_de_contenedores_llenos,
             "cantidad_de_liquido_del_contenedor":cantidad_de_liquido_x_contenedor,
             "cantidad_de_liquido_en_contenedores_no_llenos":cantidad_de_liquido_en_contenedores_no_llenos,
@@ -148,19 +154,22 @@ class Ui():
              
 
     if tipo == "Producto_x_pesaje":
-     cantidad_de_contenedores_llenos = orden["Agregar producto"]["cantidad_de_contenedores_llenos"]
-     unidad_de_medida= orden["Agregar producto"]["unidad_de_medida"]
-     peso_del_contenedor = orden["Agregar producto"]["peso_del_contenedor"]
-     peso_total_de_contenedores_no_llenos = orden["Agregar producto"]\
+     cantidad_de_contenedores_llenos = orden[key]["cantidad_de_contenedores_llenos"]
+     unidad_de_medida= orden[key]["unidad_de_medida"]
+     peso_del_contenedor = orden[key]["peso_del_contenedor"]
+     peso_total_de_contenedores_no_llenos = orden[key]\
        ["peso_total_de_contenedores_no_llenos"]
-     precio_x_pesaje = orden["Agregar producto"]["precio_x_pesaje"]
-     precio_del_contenedor= orden["Agregar producto"]["precio_x_contenedor"]
-     pesaje_total_del_producto = orden["Agregar producto"]["pesaje_total_del_producto"]
+     precio_x_pesaje = orden[key]["precio_x_pesaje"]
+     precio_del_contenedor= orden[key]["precio_x_contenedor"]
+     pesaje_total_del_producto = orden[key]["pesaje_total_del_producto"]
 
      if cantidad_de_contenedores_llenos.get():
       cantidad_de_contenedores_llenos = int(cantidad_de_contenedores_llenos.get())
      else:
-      raise EntryVacios()
+      if key == "Agregar producto":
+       raise EntryVacios()
+      else:
+       cantidad_de_contenedores_llenos = None
        
      if peso_del_contenedor.get():
       if unidad_de_medida.get() != "Unidad de medida":
@@ -211,7 +220,7 @@ class Ui():
      else:
       pesaje_total_del_producto = None
        
-     orden["Agregar producto"] =  {"tipo":"Producto_x_pesaje",nombre:{"nombre":nombre,
+     orden[key] =  {"tipo":"Producto_x_pesaje",nombre:{"nombre":nombre,
            "cantidad_de_contenedores_llenos":cantidad_de_contenedores_llenos,
            "peso_del_contenedor":peso_del_contenedor,
            "peso_total_de_contenedores_no_llenos":peso_total_de_contenedores_no_llenos,
@@ -219,7 +228,7 @@ class Ui():
            "precio_x_contenedor":precio_del_contenedor,
            "pesaje_total_del_producto":pesaje_total_del_producto}}
      
-    if self.callback(orden) is True:
+    if self.callback(orden,producto) is True:
      messagebox.showinfo("Guardado Exitoso", "El producto a sido guardado exitosamente")
      self.__Regreso(self.Clasificator_Product)
     
@@ -327,6 +336,7 @@ class Ui():
    name_entry = Label(self.frame_base,text=nom.get())
    name_entry.config(font=("Arial",25),bg="#2E2E2E",fg="white")
    name_entry.grid(column=1,row=1,pady=10,padx=0)
+
    match num:
     case 1 :
      varcant = StringVar()
@@ -346,7 +356,66 @@ class Ui():
      mostrar_precio.config(font=("Arial",25),bg="#2E2E2E",fg="white")
      mostrar_precio.grid(column=2,row=3,pady=10,padx=0)
     case 2:
-     pass
+     varcantidad_de_contenedores_llenos = StringVar()
+     varpeso_del_contenedor = StringVar()
+     varpeso_total_de_contenedores_no_llenos = StringVar()
+     varprecio_x_pesaje = StringVar()
+     varprecio_x_contenedor = StringVar()
+     varpesaje_total_del_producto = StringVar()
+     varcantidad_de_contenedores_llenos.set(diccionary["cantidad_de_contenedores_llenos"])
+
+     if diccionary["peso_total_de_contenedores_no_llenos"]:
+      varpeso_total_de_contenedores_no_llenos.set\
+      (f"{diccionary["peso_total_de_contenedores_no_llenos"]["cantidad"]} {diccionary["peso_total_de_contenedores_no_llenos"]["unidad_de_medida"]}")
+     else:
+      varpeso_total_de_contenedores_no_llenos.set("no se conoce su preso")
+
+     if diccionary["peso_del_contenedor"]:
+      varpeso_del_contenedor.\
+        set(f"{diccionary["peso_del_contenedor"]["cantidad"]} {diccionary["peso_del_contenedor"]["unidad_de_medida"]}")
+     else:
+      varpeso_del_contenedor.set("no se conoce su peso")
+
+     if diccionary["precio_x_pesaje"]:
+      varprecio_x_pesaje.set(f"{diccionary["precio_x_pesaje"]["cantidad"]} {diccionary["precio_x_pesaje"]["tipo"]}")
+     else:
+      varprecio_x_pesaje.set("no se conoce su precio")
+
+     if diccionary["precio_x_contenedor"]:
+      varprecio_x_contenedor.set(f"{diccionary["precio_x_contenedor"]["cantidad"]} {diccionary["precio_x_contenedor"]["tipo"]}")
+     else:
+      varprecio_x_contenedor.set("no se conoce su precio")
+     
+     if diccionary["pesaje_total_del_producto"]:
+      varpesaje_total_del_producto.set\
+      (f"{diccionary["pesaje_total_del_producto"]["cantidad"]} {diccionary["pesaje_total_del_producto"]["unidad_de_medida"]}")
+     else:
+      varpesaje_total_del_producto.set("no se conoce su preso")
+
+     varcantidad_de_contenedores_llenos = Label(self.frame_base,text=varcantidad_de_contenedores_llenos.get())
+     varcantidad_de_contenedores_llenos.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varcantidad_de_contenedores_llenos.grid(column=2,row=2,pady=10,padx=0)
+     
+     varpeso_del_contenedor = Label(self.frame_base,text=varpeso_del_contenedor.get())
+     varpeso_del_contenedor.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varpeso_del_contenedor.grid(column=2,row=3,pady=10,padx=0)
+
+     varpeso_total_de_contenedores_no_llenos = Label(self.frame_base,text=varpeso_total_de_contenedores_no_llenos.get())
+     varpeso_total_de_contenedores_no_llenos.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varpeso_total_de_contenedores_no_llenos.grid(column=2,row=4,pady=10,padx=0)
+     
+     varpesaje_total_del_producto = Label(self.frame_base,text=varpesaje_total_del_producto.get())
+     varpesaje_total_del_producto.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varpesaje_total_del_producto.grid(column=2,row=5,pady=10,padx=0)
+
+     varprecio_x_pesaje = Label(self.frame_base,text=varprecio_x_pesaje.get())
+     varprecio_x_pesaje.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varprecio_x_pesaje.grid(column=2,row=6,pady=10,padx=0)
+     
+     varprecio_x_contenedor = Label(self.frame_base,text=varprecio_x_contenedor.get())
+     varprecio_x_contenedor.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varprecio_x_contenedor.grid(column=2,row=7,pady=10,padx=0)
+
   else:
    atras = self.Clasificator_Product
    #nombre
@@ -491,36 +560,46 @@ class Ui():
 #frase que identifica el tipo de producto
   frase_superior= Label(self.frame_base,textvariable= tipo_producto)
   frase_superior.config(bg="#2E2E2E",fg= "white",font=("Arial",79))
-  frase_superior.grid(column=0,row=0,ipady=20,padx = 125,pady= 50,columnspan=7)
+  frase_superior.grid(column=0,row=0,ipady=10,padx = 125,pady= 50,columnspan=7)
 
-  # boton guardado
+# boton guardado
   save_button = Button(self.frame_base,text = "Guardar Producto")
   save_button.config(bg="blue",font=("Arial",15))
   save_button.grid(column=0,row=fila,padx=15)
 
-  #boton regresar
+#boton regresar
   atras_button = Button(self.frame_base,text = "Regresar",command=lambda:self.__Regreso(atras))
   atras_button.config(bg="red",font=("Arial",15))
   atras_button.grid(column=1,row=fila,padx=15)
 
-  #boton del tipo de moneda 
+#boton del tipo de moneda 
   values = ["Tipo de moneda","CUP","USD","MLC"]
   tipo_de_moneda_buton = ttk.Combobox(self.frame_base,values=values,font=("Arial",10))
   tipo_de_moneda_buton.current(0)
   tipo_de_moneda_buton.grid(column=2,row = 1,padx=10)
 
-  #boton de unidades de medida solo para los productos pesajes y los liquidos
+#boton de unidades de medida solo para los productos pesajes y los liquidos
   if num ==2 or num== 3:
    unidad_de_medida_buton = ttk.Combobox(self.frame_base,values=valores,font=("Arial",10))
    unidad_de_medida_buton.current(0)
    unidad_de_medida_buton.grid(column=3,row=1,padx= 10)
 
+
+  if product:  
+   clave = "Actualizar productos"
+   producto = {"nombre":nom}
+   orden = {clave:producto}
+  else:
+   clave = "Agregar producto"
+   producto = {"nombre":name_entry}
+   orden = {clave :producto}
+
   if num ==1:
-   producto = {"tipo":"Productos_contables","nombre":name_entry,"cantidad":cantidad_entry,
+   newproducto = {"tipo":"Productos_contables","cantidad":cantidad_entry,
                "precio_x_unidad":precio_entry,"moneda":tipo_de_moneda_buton}
 
   elif num ==2:
-   producto = {"tipo":"Producto_x_pesaje","nombre":name_entry,
+   newproducto = {"tipo":"Producto_x_pesaje",
                "cantidad_de_contenedores_llenos":cantidad_de_contenedores_entry,
                "peso_del_contenedor":peso_del_contenedor_entry,
                "peso_total_de_contenedores_no_llenos":pesaje_total_en_contenedores_no_llenos_entry,
@@ -530,7 +609,7 @@ class Ui():
                "moneda":tipo_de_moneda_buton,"unidad_de_medida":unidad_de_medida_buton}
 
   else:
-   producto =  {"tipo":"Producto_liquido","nombre":name_entry,
+   newproducto =  {"tipo":"Producto_liquido",
                "cantidad_de_contenedores_llenos":cantidad_de_contenedores_llenos_entry,
                "cantidad_de_liquido_x_contenedor":cantidad_de_liquido_x_contenedor_entry,
                "cantidad_de_liquido_en_contenedores_no_llenos":cantidad_de_liquido_en_contenedores_no_llenos_entry,
@@ -539,8 +618,10 @@ class Ui():
                "cantidad_de_liquido_total":cantidad_de_liquido_total_entry,
                "moneda":tipo_de_moneda_buton,"unidad_de_medida":unidad_de_medida_buton}
 
-  orden = {"Agregar producto":producto}      
-  save_button.config(command=lambda : self.__Guardar(orden))
+  producto |= newproducto
+
+  orden[clave] = producto      
+  save_button.config(command=lambda : self.__Guardar(orden,clave,product))
 
  def Find_Product(self,Nextaccion):
   self.__Clear()

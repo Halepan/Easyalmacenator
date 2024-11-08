@@ -126,7 +126,6 @@ def Creator_Productos(registro):
       )
 
      if producto.peso_del_contenedor:
-      print(producto.peso_del_contenedor)
       producto.peso_del_contenedor = Unidades_Medida(
         producto.peso_del_contenedor['cantidad'],
         producto.peso_del_contenedor['unidad_de_medida']
@@ -184,3 +183,59 @@ def Tipo_product(product):
    return 2
  elif isinstance(product,Producto_liquido):
    return 3
+
+def Sobreescribir_product(producto_origin,new_producto):
+ num_new = Tipo_product(new_producto)
+ match num_new:
+  case 1:
+   if new_producto.cantidad:
+    producto_origin.cantidad = new_producto.cantidad
+
+   if new_producto.precio_x_unidad:
+    producto_origin.precio_x_unidad = new_producto.precio_x_unidad
+
+   return producto_origin
+  
+  case 2:
+       if new_producto.peso_del_contenedor:
+        producto_origin.peso_del_contenedor = new_producto.peso_del_contenedor
+
+       if new_producto.cantidad_de_contenedores_llenos:
+        producto_origin.cantidad_de_contenedores_llenos = new_producto.cantidad_de_contenedores_llenos
+
+       if new_producto.peso_total_de_contenedores_no_llenos:
+        producto_origin.peso_total_de_contenedores_no_llenos = new_producto.peso_total_de_contenedores_no_llenos
+
+       if new_producto.pesaje_total_del_producto:
+        producto_origin.pesaje_total_del_producto = new_producto.pesaje_total_del_producto
+
+       if new_producto.precio_x_contenedor:
+        producto_origin.precio_x_contenedor = new_producto.precio_x_contenedor
+
+       if new_producto.precio_x_pesaje:
+        producto_origin.precio_x_pesaje = new_producto.precio_x_pesaje
+
+       return producto_origin
+
+  case 3:
+       if new_producto.cantidad_de_liquido_del_contenedor:
+        producto_origin.cantidad_de_liquido_del_contenedor = new_producto.cantidad_de_liquido_del_contenedor
+
+       if new_producto.cantidad_de_contenedores_llenos:
+        producto_origin.cantidad_de_contenedores_llenos = new_producto.cantidad_de_contenedores_llenos
+
+       if new_producto.cantidad_de_liquido_en_contenedores_no_llenos:
+        producto_origin.cantidad_de_liquido_en_contenedores_no_llenos = new_producto.cantidad_de_liquido_en_contenedores_no_llenos
+
+       if new_producto.cantidad_liquido_total:
+        producto_origin.cantidad_liquido_total = new_producto.cantidad_liquido_total
+
+       if new_producto.precio_x_contenedor:
+        producto_origin.precio_x_contenedor = new_producto.precio_x_contenedor
+
+       if new_producto.precio_x_litros:
+        producto_origin.precio_x_litros = new_producto.precio_x_litros
+
+       return producto_origin
+ print("Error")
+

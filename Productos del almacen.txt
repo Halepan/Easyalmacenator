@@ -84,7 +84,7 @@
             "pesaje_total_del_producto": null,
             "peso_del_contenedor": {
                 "cantidad": 5,
-                "unidad_de_medida": "Unidad de medida"
+                "unidad_de_medida": "kilogramos"
             }
         }
     },
