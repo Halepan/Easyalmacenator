@@ -33,5 +33,104 @@
             "cantidad": 23,
             "precio_x_unidad": null
         }
+    },
+    {
+        "tipo": "Productos_contables",
+        "i": {
+            "nombre": "i",
+            "cantidad": 9,
+            "precio_x_unidad": null
+        }
+    },
+    {
+        "tipo": "Productos_contables",
+        "uy": {
+            "nombre": "uy",
+            "cantidad": 6,
+            "precio_x_unidad": null
+        }
+    },
+    {
+        "tipo": "Productos_contables",
+        "65": {
+            "nombre": "65",
+            "cantidad": 4,
+            "precio_x_unidad": null
+        }
+    },
+    {
+        "tipo": "Producto_x_pesaje",
+        "ju": {
+            "nombre": "ju",
+            "cantidad_de_contenedores_llenos": 3,
+            "peso_total_de_contenedores_no_llenos": null,
+            "precio_x_contenedor": null,
+            "precio_x_pesaje": null,
+            "pesaje_total_del_producto": null,
+            "peso_del_contenedor": {
+                "cantidad": 4,
+                "unidad_de_medida": "Unidad de medida"
+            }
+        }
+    },
+    {
+        "tipo": "Producto_x_pesaje",
+        "df": {
+            "nombre": "df",
+            "cantidad_de_contenedores_llenos": 3,
+            "peso_total_de_contenedores_no_llenos": null,
+            "precio_x_contenedor": null,
+            "precio_x_pesaje": null,
+            "pesaje_total_del_producto": null,
+            "peso_del_contenedor": {
+                "cantidad": 5,
+                "unidad_de_medida": "Unidad de medida"
+            }
+        }
+    },
+    {
+        "tipo": "Producto_x_pesaje",
+        "un": {
+            "nombre": "un",
+            "cantidad_de_contenedores_llenos": 3,
+            "peso_total_de_contenedores_no_llenos": null,
+            "precio_x_contenedor": null,
+            "precio_x_pesaje": null,
+            "pesaje_total_del_producto": null,
+            "peso_del_contenedor": {
+                "cantidad": 6,
+                "unidad_de_medida": "kilogramos"
+            }
+        }
+    },
+    {
+        "tipo": "Producto_liquido",
+        "cv": {
+            "nombre": "cv",
+            "cantidad_de_contenedores_llenos": 2,
+            "cantidad_de_liquido_del_contenedor": {
+                "cantidad": 3.0,
+                "unidad_de_medida": "Unidad de medida"
+            },
+            "precio_x_contenedor": null,
+            "precio_x_litros": null,
+            "cantidad_liquido_total": null,
+            "cantidad_de_liquido_en_contenedores_no_llenos": null
+        }
+    },
+    {
+        "tipo": "Producto_liquido",
+        "reew": {
+            "nombre": "reew",
+            "cantidad_de_contenedores_llenos": 3,
+            "cantidad_de_liquido_del_contenedor": {
+                "cantidad": 3.0,
+                "unidad_de_medida": "litros"
+            },
+            "precio_x_contenedor": null,
+            "precio_x_litros": null,
+            "cantidad_liquido_total": null,
+            "cantidad_de_liquido_en_contenedores_no_llenos": null
+        }
     }
 ]

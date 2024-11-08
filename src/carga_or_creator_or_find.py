@@ -91,7 +91,7 @@ def Creator_Productos(registro):
         producto.precio_x_contenedor['tipo']
       )
 
-     if producto.precio_x_litros != "no se han rejistrado datos al respecto":
+     if producto.precio_x_litros:
       producto.precio_x_litros = Moneda(
         producto.precio_x_litros['cantidad'],
         producto.precio_x_litros['tipo']
@@ -110,12 +110,12 @@ def Creator_Productos(registro):
      # Se crea el objeto del producto_x_pesaje
      producto = Producto_x_pesaje(
        claves_cargada['nombre'],
-       claves_cargada['peso_del_contenedor'],
        claves_cargada['cantidad_de_contenedores_llenos'],
+       claves_cargada['peso_del_contenedor'],
        claves_cargada['peso_total_de_contenedores_no_llenos'],
-       claves_cargada['pesaje_total_del_producto'],
+       claves_cargada['precio_x_pesaje'],
        claves_cargada['precio_x_contenedor'],
-       claves_cargada['precio_x_pesaje']
+       claves_cargada['pesaje_total_del_producto']
      )
 
      # Se establecen las unidades de medida y moneda, si están definidas
@@ -126,6 +126,7 @@ def Creator_Productos(registro):
       )
 
      if producto.peso_del_contenedor:
+      print(producto.peso_del_contenedor)
       producto.peso_del_contenedor = Unidades_Medida(
         producto.peso_del_contenedor['cantidad'],
         producto.peso_del_contenedor['unidad_de_medida']
@@ -154,7 +155,7 @@ def Creator_Productos(registro):
 
   print("error inesperado")
  # Se manejan los errores de claves faltantes
- except KeyError:
+ except ValueError:
   print("Error: Faltan claves de registro.")
   return None # Se retorna None si hay un error
 

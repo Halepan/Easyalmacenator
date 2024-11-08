@@ -121,7 +121,7 @@ class Producto_x_pesaje(Productos):
     datos["peso_del_contenedor"]=Verificador_de_None(self.peso_del_contenedor,
      self.peso_del_contenedor.dict())
    except AttributeError:  datos["peso_del_contenedor"]=Verificador_de_None(self.peso_del_contenedor,
-     self.peso_del_contenedor.dict())
+     self.peso_del_contenedor)
 
    return datos
 
