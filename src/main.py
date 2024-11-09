@@ -3,9 +3,11 @@ from vista.ui import Ui
 from carga_or_creator_or_find import Creator_Productos,Load_archivo,Tipo_product,Sobreescribir_product
 from tkinter import Tk
 
+
 def funcion_auxiliar_del_main(orden,productorigin = None):
  carga = Load_archivo()
  control = Control(carga)
+  
  if "Agregar producto" in orden:
   producto = orden["Agregar producto"]
   producto = Creator_Productos(producto)
@@ -46,10 +48,22 @@ def funcion_auxiliar_del_main(orden,productorigin = None):
    control.Actualizacion(producto)
   else:
    print("error")
+ elif "Borrar" in orden:
+  nombre = orden["Borrar"]
+  control.Borrar_product(nombre)
+  return True
+ 
  return True
 
+carga = Load_archivo()
+archivo = False
+if carga:
+ archivo = True
+else:
+ archivo= False
+ 
 root = Tk()
-app = Ui(root,funcion_auxiliar_del_main)
+app = Ui(root,funcion_auxiliar_del_main,archivo)
 ejecucion =app.Principal_Windows()
 
 root.mainloop()

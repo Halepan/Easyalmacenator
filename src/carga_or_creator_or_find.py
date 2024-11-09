@@ -172,7 +172,7 @@ def Load_archivo():
    else:
     raise TypeError("no aparece el archivo")
   return productos_cargados
- except FileNotFoundError:return print("el archivo no existe")
+ except FileNotFoundError:return False
  except json.JSONDecodeError: print("Error al decodificar el archivo Json")
  except TypeError:print(TypeError)
 

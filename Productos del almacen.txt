@@ -3,8 +3,11 @@
         "tipo": "Productos_contables",
         "perro": {
             "nombre": "perro",
-            "cantidad": 5,
-            "precio_x_unidad": null
+            "cantidad": 4,
+            "precio_x_unidad": {
+                "cantidad": 3.0,
+                "tipo": "CUP"
+            }
         }
     },
     {

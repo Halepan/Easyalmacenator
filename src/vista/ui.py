@@ -12,8 +12,12 @@ class UEntryVacios(Exception):
  """excepcion personalizada para los entry   vacios de unidades de medida"""
  pass
 
+class NohayArchivo(Exception):
+ """excepcion personalizada para cuando el archivo este vacio"""
+ pass
+
 class Ui():
- def __init__(self,root,callback):
+ def __init__(self,root,callback,archivo):
   self.color_fond="#2E2E2E"
   self.anch = "1950"
   self.altura = "1400"
@@ -26,6 +30,7 @@ class Ui():
   self.frame_base.pack()
 
   self.callback = callback
+  self.archivo = archivo
 
 #metodos simples
  def __Clear(self):
@@ -73,7 +78,6 @@ class Ui():
 
      orden[key] = {"tipo":tipo,nombre:{'nombre':nombre,'cantidad':cantidad,
             'precio_x_unidad':precio}}
-
 
     if tipo == "Producto_liquido":
      
@@ -152,7 +156,6 @@ class Ui():
             "precio_x_contenedor":precio_del_contenedor,
             "cantidad_liquido_total":cantidad_de_liquido_total}}
              
-
     if tipo == "Producto_x_pesaje":
      cantidad_de_contenedores_llenos = orden[key]["cantidad_de_contenedores_llenos"]
      unidad_de_medida= orden[key]["unidad_de_medida"]
@@ -230,6 +233,7 @@ class Ui():
      
     if self.callback(orden,producto) is True:
      messagebox.showinfo("Guardado Exitoso", "El producto a sido guardado exitosamente")
+     self.archivo = True
      self.__Regreso(self.Clasificator_Product)
     
   except EntryVacios:messagebox.showerror("Error De Guardado", "Se debe registrar un nombre y la cantidad de lotes del producto")
@@ -245,7 +249,8 @@ class Ui():
 
  def __FindAction(self,orden):
   try:
-   nombre = orden["Actualizar productos"] or ["Mostrar productos"]
+   for key in orden:
+    nombre = orden[key] 
    nombre = nombre.get()
    product = self.callback({"Buscar productos":nombre})
    if product:
@@ -258,6 +263,106 @@ class Ui():
   except ValueError:messagebox.showerror("ERROR DE BUSQUEDA","Al buscar uno de los productos selecciona uno de los productos de la\
   lista para facilitar la busqueda de los productos")
   
+ def Actualizar_product(self,product):
+  num = self.callback({"Tipo de productos":product})
+  self.New_producto(num,product)
+
+ def __Mostrador_de_info(self,num,diccionary,prosedencia):
+  match prosedencia:
+    case "escribir":
+      columna = 2
+    case "mostrar":
+      columna = 1
+  
+  match num:
+    case 1 :
+     varcant = StringVar()
+     varprecio = StringVar()
+     varcant.set(diccionary["cantidad"])
+
+     if diccionary["precio_x_unidad"]:
+      varprecio.set(f"{diccionary["precio_x_unidad"]["cantidad"]} {diccionary["precio_x_unidad"]["tipo"]}")
+     else:
+      varprecio.set("no se conoce su precio")
+
+     mostrar_cant = Label(self.frame_base,text=varcant.get())
+     mostrar_cant.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     mostrar_cant.grid(column=columna,row=2,pady=10,padx=0)
+     
+     mostrar_precio = Label(self.frame_base,text=varprecio.get())
+     mostrar_precio.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     mostrar_precio.grid(column=columna,row=3,pady=10,padx=0)
+    case 2:
+     varcantidad_de_contenedores_llenos = StringVar()
+     varpeso_del_contenedor = StringVar()
+     varpeso_total_de_contenedores_no_llenos = StringVar()
+     varprecio_x_pesaje = StringVar()
+     varprecio_x_contenedor = StringVar()
+     varpesaje_total_del_producto = StringVar()
+     varcantidad_de_contenedores_llenos.set(diccionary["cantidad_de_contenedores_llenos"])
+
+     if diccionary["peso_total_de_contenedores_no_llenos"]:
+      varpeso_total_de_contenedores_no_llenos.set\
+      (f"{diccionary["peso_total_de_contenedores_no_llenos"]["cantidad"]} {diccionary["peso_total_de_contenedores_no_llenos"]["unidad_de_medida"]}")
+     else:
+      varpeso_total_de_contenedores_no_llenos.set("no se conoce su preso")
+
+     if diccionary["peso_del_contenedor"]:
+      varpeso_del_contenedor.\
+        set(f"{diccionary["peso_del_contenedor"]["cantidad"]} {diccionary["peso_del_contenedor"]["unidad_de_medida"]}")
+     else:
+      varpeso_del_contenedor.set("no se conoce su peso")
+
+     if diccionary["precio_x_pesaje"]:
+      varprecio_x_pesaje.set(f"{diccionary["precio_x_pesaje"]["cantidad"]} {diccionary["precio_x_pesaje"]["tipo"]}")
+     else:
+      varprecio_x_pesaje.set("no se conoce su precio")
+
+     if diccionary["precio_x_contenedor"]:
+      varprecio_x_contenedor.set(f"{diccionary["precio_x_contenedor"]["cantidad"]} {diccionary["precio_x_contenedor"]["tipo"]}")
+     else:
+      varprecio_x_contenedor.set("no se conoce su precio")
+     
+     if diccionary["pesaje_total_del_producto"]:
+      varpesaje_total_del_producto.set\
+      (f"{diccionary["pesaje_total_del_producto"]["cantidad"]} {diccionary["pesaje_total_del_producto"]["unidad_de_medida"]}")
+     else:
+      varpesaje_total_del_producto.set("no se conoce su preso")
+
+     varcantidad_de_contenedores_llenos = Label(self.frame_base,text=varcantidad_de_contenedores_llenos.get())
+     varcantidad_de_contenedores_llenos.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varcantidad_de_contenedores_llenos.grid(column=columna,row=2,pady=10,padx=0)
+     
+     varpeso_del_contenedor = Label(self.frame_base,text=varpeso_del_contenedor.get())
+     varpeso_del_contenedor.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varpeso_del_contenedor.grid(column=columna,row=3,pady=10,padx=0)
+
+     varpeso_total_de_contenedores_no_llenos = Label(self.frame_base,text=varpeso_total_de_contenedores_no_llenos.get())
+     varpeso_total_de_contenedores_no_llenos.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varpeso_total_de_contenedores_no_llenos.grid(column=columna,row=4,pady=10,padx=0)
+     
+     varpesaje_total_del_producto = Label(self.frame_base,text=varpesaje_total_del_producto.get())
+     varpesaje_total_del_producto.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varpesaje_total_del_producto.grid(column=columna,row=5,pady=10,padx=0)
+
+     varprecio_x_pesaje = Label(self.frame_base,text=varprecio_x_pesaje.get())
+     varprecio_x_pesaje.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varprecio_x_pesaje.grid(column=columna,row=6,pady=10,padx=0)
+     
+     varprecio_x_contenedor = Label(self.frame_base,text=varprecio_x_contenedor.get())
+     varprecio_x_contenedor.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+     varprecio_x_contenedor.grid(column=columna,row=7,pady=10,padx=0)
+    case 3:
+      pass
+  return 0
+
+ def ___Borrar(self,nombre):
+  eliminar =messagebox.askyesno("Eliminar","Desea eliminar este producto")
+  if eliminar:
+   orden = {"Borrar":nombre}
+   if self.callback(orden):
+    messagebox.showinfo("Eliminado",f"Se ha eliminado el producto: {nombre}")
+    self.__Regreso(lambda: self.Find_Product("Actualizar productos"))
 
 #metodos complejos
  def Principal_Windows(self):
@@ -283,10 +388,10 @@ class Ui():
   look_producto.config(width="18",height="-2")
   look_producto.grid(column=0,row=3,pady=10)
 
-  configuration = Button(self.frame_base,text="Configuracion",font=("Arial",25),command= self.__Salir)
+  """configuration = Button(self.frame_base,text="Configuracion",font=("Arial",25),command= self.__Salir)
   configuration.config(fg="white",bg="red")
   configuration.config(width="18",height="-2")
-  configuration.grid(column=0,row=5,pady=10)
+  configuration.grid(column=0,row=5,pady=10)"""
 
   salir = Button(self.frame_base,text="Salir",font=("Arial",25),command= self.__Salir)
   salir.config(fg="white",bg="red")
@@ -336,86 +441,8 @@ class Ui():
    name_entry = Label(self.frame_base,text=nom.get())
    name_entry.config(font=("Arial",25),bg="#2E2E2E",fg="white")
    name_entry.grid(column=1,row=1,pady=10,padx=0)
-
-   match num:
-    case 1 :
-     varcant = StringVar()
-     varprecio = StringVar()
-     varcant.set(diccionary["cantidad"])
-
-     if diccionary["precio_x_unidad"]:
-      varprecio.set(f"{diccionary["precio_x_unidad"]["cantidad"]} {diccionary["precio_x_unidad"]["tipo"]}")
-     else:
-      varprecio.set("no se conoce su precio")
-
-     mostrar_cant = Label(self.frame_base,text=varcant.get())
-     mostrar_cant.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     mostrar_cant.grid(column=2,row=2,pady=10,padx=0)
-     
-     mostrar_precio = Label(self.frame_base,text=varprecio.get())
-     mostrar_precio.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     mostrar_precio.grid(column=2,row=3,pady=10,padx=0)
-    case 2:
-     varcantidad_de_contenedores_llenos = StringVar()
-     varpeso_del_contenedor = StringVar()
-     varpeso_total_de_contenedores_no_llenos = StringVar()
-     varprecio_x_pesaje = StringVar()
-     varprecio_x_contenedor = StringVar()
-     varpesaje_total_del_producto = StringVar()
-     varcantidad_de_contenedores_llenos.set(diccionary["cantidad_de_contenedores_llenos"])
-
-     if diccionary["peso_total_de_contenedores_no_llenos"]:
-      varpeso_total_de_contenedores_no_llenos.set\
-      (f"{diccionary["peso_total_de_contenedores_no_llenos"]["cantidad"]} {diccionary["peso_total_de_contenedores_no_llenos"]["unidad_de_medida"]}")
-     else:
-      varpeso_total_de_contenedores_no_llenos.set("no se conoce su preso")
-
-     if diccionary["peso_del_contenedor"]:
-      varpeso_del_contenedor.\
-        set(f"{diccionary["peso_del_contenedor"]["cantidad"]} {diccionary["peso_del_contenedor"]["unidad_de_medida"]}")
-     else:
-      varpeso_del_contenedor.set("no se conoce su peso")
-
-     if diccionary["precio_x_pesaje"]:
-      varprecio_x_pesaje.set(f"{diccionary["precio_x_pesaje"]["cantidad"]} {diccionary["precio_x_pesaje"]["tipo"]}")
-     else:
-      varprecio_x_pesaje.set("no se conoce su precio")
-
-     if diccionary["precio_x_contenedor"]:
-      varprecio_x_contenedor.set(f"{diccionary["precio_x_contenedor"]["cantidad"]} {diccionary["precio_x_contenedor"]["tipo"]}")
-     else:
-      varprecio_x_contenedor.set("no se conoce su precio")
-     
-     if diccionary["pesaje_total_del_producto"]:
-      varpesaje_total_del_producto.set\
-      (f"{diccionary["pesaje_total_del_producto"]["cantidad"]} {diccionary["pesaje_total_del_producto"]["unidad_de_medida"]}")
-     else:
-      varpesaje_total_del_producto.set("no se conoce su preso")
-
-     varcantidad_de_contenedores_llenos = Label(self.frame_base,text=varcantidad_de_contenedores_llenos.get())
-     varcantidad_de_contenedores_llenos.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     varcantidad_de_contenedores_llenos.grid(column=2,row=2,pady=10,padx=0)
-     
-     varpeso_del_contenedor = Label(self.frame_base,text=varpeso_del_contenedor.get())
-     varpeso_del_contenedor.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     varpeso_del_contenedor.grid(column=2,row=3,pady=10,padx=0)
-
-     varpeso_total_de_contenedores_no_llenos = Label(self.frame_base,text=varpeso_total_de_contenedores_no_llenos.get())
-     varpeso_total_de_contenedores_no_llenos.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     varpeso_total_de_contenedores_no_llenos.grid(column=2,row=4,pady=10,padx=0)
-     
-     varpesaje_total_del_producto = Label(self.frame_base,text=varpesaje_total_del_producto.get())
-     varpesaje_total_del_producto.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     varpesaje_total_del_producto.grid(column=2,row=5,pady=10,padx=0)
-
-     varprecio_x_pesaje = Label(self.frame_base,text=varprecio_x_pesaje.get())
-     varprecio_x_pesaje.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     varprecio_x_pesaje.grid(column=2,row=6,pady=10,padx=0)
-     
-     varprecio_x_contenedor = Label(self.frame_base,text=varprecio_x_contenedor.get())
-     varprecio_x_contenedor.config(font=("Arial",25),bg="#2E2E2E",fg="white")
-     varprecio_x_contenedor.grid(column=2,row=7,pady=10,padx=0)
-
+   self.__Mostrador_de_info(num,diccionary,"escribir")
+   
   else:
    atras = self.Clasificator_Product
    #nombre
@@ -505,7 +532,7 @@ class Ui():
    case 3:  
     tipo_producto.set("Productos Liquidos")
     #estos son los valores pque tendra el boton de unidad_de_medida
-    valores = ["Unidad de medida","mililitros","litros", "onzas líquidas"]
+    valores = ["Unidad de medida","mililitros","litros"]
 
     #cantidad de liquido de cada contenedor lleno
     cantidad_de_liquido_x_contenedor_label= Label(self.frame_base,text="Cantidad de liquido por contenedor lleno :")
@@ -584,11 +611,15 @@ class Ui():
    unidad_de_medida_buton.current(0)
    unidad_de_medida_buton.grid(column=3,row=1,padx= 10)
 
-
   if product:  
    clave = "Actualizar productos"
    producto = {"nombre":nom}
    orden = {clave:producto}
+   # boton guardado
+   name = nom.get()
+   delete_button = Button(self.frame_base,text = "Borrar Producto")
+   delete_button.config(bg="blue",font=("Arial",15),command= lambda: self.___Borrar(name))
+   delete_button.grid(column=2,row=fila,padx=15)
   else:
    clave = "Agregar producto"
    producto = {"nombre":name_entry}
@@ -624,37 +655,145 @@ class Ui():
   save_button.config(command=lambda : self.__Guardar(orden,clave,product))
 
  def Find_Product(self,Nextaccion):
-  self.__Clear()
-  label_principal = Label(self.frame_base,text="Buscar Producto")
-  label_principal.config(fg="white",bg="#2E2E2E",font=("Arial",69))
-  label_principal.grid(column=0,row=0,pady=20)
-
-  barra_find = ttk.Combobox(self.frame_base,values=[],state="normal",font=("Arial",10))
-  barra_find.config(font= ("Arial",15))
-  barra_find.grid(column=0,row=1,padx=5,pady=10,sticky="we")
-  barra_find.bind("<KeyRelease>",lambda event: self.__Findlistcoincidence(event,barra_find))
-
-  boton_Buscar = Button(self.frame_base,text="Buscar",
-    font=("Arial",12),command=lambda: self.__FindAction(orden = {Nextaccion:barra_find}))
-  boton_Buscar.config(bg="blue",fg="white")
-  boton_Buscar.grid(column=1,row=1,padx=5)
-
-  button_atras=Button(self.frame_base,text="Regresar",
-    font=("Arial",12),command=lambda: self.__Regreso(self.Principal_Windows))
-  button_atras.config(bg="red",fg="white")
-  button_atras.grid(column=1, row=2,pady=10)
-
- def Actualizar_product(self,product):
-  num = self.callback({"Tipo de productos":product})
-  self.New_producto(num,product)
+  try:
+   if self.archivo is False:
+    raise NohayArchivo()
+   self.__Clear()
+   label_principal = Label(self.frame_base,text="Buscar Producto")
+   label_principal.config(fg="white",bg="#2E2E2E",font=("Arial",69))
+   label_principal.grid(column=0,row=0,pady=20)
+ 
+   barra_find = ttk.Combobox(self.frame_base,values=[],state="normal",font=("Arial",10))
+   barra_find.config(font= ("Arial",15))
+   barra_find.grid(column=0,row=1,padx=5,pady=10,sticky="we")
+   barra_find.bind("<KeyRelease>",lambda event: self.__Findlistcoincidence(event,barra_find))
+ 
+   boton_Buscar = Button(self.frame_base,text="Buscar",
+     font=("Arial",12),command=lambda: self.__FindAction(orden = {Nextaccion:barra_find}))
+   boton_Buscar.config(bg="blue",fg="white")
+   boton_Buscar.grid(column=1,row=1,padx=5)
+ 
+   button_atras=Button(self.frame_base,text="Regresar",
+     font=("Arial",12),command=lambda: self.__Regreso(self.Principal_Windows))
+   button_atras.config(bg="red",fg="white")
+   button_atras.grid(column=1, row=2,pady=10)
+  except NohayArchivo: messagebox.showinfo("Archivo Vacio","Aun no se han guardado ningun producto")
 
  def Mostrar_product(self,product):
+  tipo_producto = StringVar()
   diccionary = product.dict()
-  nombre = StringVar()
-  nombre.set(diccionary["nombre"])
-  if fram:
-   pass
-  else:
-   fram = self.frame_base
-  nom_label = Label(fram,textvariable= nombre.get())
-  nom_label.grid(column=0,row=0)
+  num = self.callback({"Tipo de productos":product})
+  self.__Clear()
+  atras = lambda: self.Find_Product("Mostrar productos")
+  diccionary = product.dict()
+  nom = StringVar()
+  nom.set(diccionary["nombre"])
+  mostrar_nom = Label(self.frame_base,text=nom.get())
+  mostrar_nom.config(font=("Arial",25),bg="#2E2E2E",fg="white")
+  mostrar_nom.grid(column=1,row=1,pady=10,padx=0)
+  name_label = Label(self.frame_base,text="Nombre del producto :")
+  name_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+  name_label.grid(column=0,row=1,pady=10,padx=0)
+  self.__Mostrador_de_info(num,diccionary,"mostrar")
+    
+  match num:
+   case 1:
+    tipo_producto.set("Producto Contable")
+
+    #cantidad
+    cantidad_label= Label(self.frame_base,text="Cantidad :")
+    cantidad_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_label.grid(column=0,row=2,pady=10)
+
+
+    #Precio
+    precio_label= Label(self.frame_base,text="Precio por producto :")
+    precio_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_label.grid(column=0,row=3,pady=10)
+
+    fila= 4
+
+   case 2:   
+    #estos son los valores que tendra el boton los valores de unidad_de_medida
+    valores = ["Unidad de medida","gramos","kilogramos","onzas","libras", "miligramos", "toneladas"]
+
+    tipo_producto.set("Producto por Pesaje")
+  
+   #cantidad de contenedores 
+    cantidad_de_contenedores_label= Label(self.frame_base,text="Cantidad de contenedores :")
+    cantidad_de_contenedores_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_contenedores_label.grid(column=0,row=2,pady=10)
+
+    #peso de contenedor 
+    peso_del_contenedor_label= Label(self.frame_base,text="peso del contenedor :")
+    peso_del_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    peso_del_contenedor_label.grid(column=0,row=3)
+
+    #pesaje_total_en_contenedores_no_llenos
+    pesaje_total_en_contenedores_no_llenos_label= Label(self.frame_base,text="pesaje total de los contenedores no llenos :")
+    pesaje_total_en_contenedores_no_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    pesaje_total_en_contenedores_no_llenos_label.grid(column=0,row=4,pady=10)
+   
+   #pesaje_total_del_producto 
+    pesaje_total_del_producto_label= Label(self.frame_base,text="pesaje total del producto :")
+    pesaje_total_del_producto_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    pesaje_total_del_producto_label.grid(column=0,row=5)            
+
+   #precio_por_peso 
+    precio_por_peso_label= Label(self.frame_base,text="precio por pesaje :")
+    precio_por_peso_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_por_peso_label.grid(column=0,row=6,pady=10)
+
+    #precio_por_contenedor
+    precio_por_contenedor_label= Label(self.frame_base,text="precio por contenedor :")
+    precio_por_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_por_contenedor_label.grid(column=0,row=7,pady=10)            
+    fila = 8
+
+   case 3:  
+    tipo_producto.set("Productos Liquidos")
+    #estos son los valores pque tendra el boton de unidad_de_medida
+    valores = ["Unidad de medida","mililitros","litros", "onzas líquidas"]
+
+    #cantidad de liquido de cada contenedor lleno
+    cantidad_de_liquido_x_contenedor_label= Label(self.frame_base,text="Cantidad de liquido por contenedor lleno :")
+    cantidad_de_liquido_x_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_liquido_x_contenedor_label.grid(column=0,row=2,pady=10)
+
+    #cantidad de contenedores llenos
+    cantidad_de_contenedores_llenos_label= Label(self.frame_base,text="Cantidad de contenedores llenos :")
+    cantidad_de_contenedores_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_contenedores_llenos_label.grid(column=0,row=3)
+
+    #cantidad de liquido en otros contenedores no llenos
+    cantidad_de_liquido_en_contenedores_no_llenos_label= Label(self.frame_base,text="Cantidad de liquido en otros contenedores no llenos :")
+    cantidad_de_liquido_en_contenedores_no_llenos_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_liquido_en_contenedores_no_llenos_label.grid(column=0,row=4,pady=10)
+   
+    #cantidad de liqido total
+    cantidad_de_liquido_total_label= Label(self.frame_base,text="Cantidad de liquido total :")
+    cantidad_de_liquido_total_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    cantidad_de_liquido_total_label.grid(column=0,row=5)
+
+   #precio del liquido
+    precio_por_contenedor_label= Label(self.frame_base,text="Precio por contenedor lleno :")
+    precio_por_contenedor_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_por_contenedor_label.grid(column=0,row=6,pady=10)
+
+    #Precio por liquido
+    precio_del_liquido_label= Label(self.frame_base,text="Precio del liquido :")
+    precio_del_liquido_label.config(bg="#2E2E2E",fg= "white",font=("Arial",26))
+    precio_del_liquido_label.grid(column=0,row=7,pady=10)
+    fila = 8
+
+#boton regresar
+  atras_button = Button(self.frame_base,text = "Regresar",command=lambda:self.__Regreso(atras))
+  atras_button.config(bg="red",font=("Arial",15))
+  atras_button.grid(column=1,row=fila,padx=15)
+
+#frase que identifica el tipo de producto
+  frase_superior= Label(self.frame_base,textvariable= tipo_producto)
+  frase_superior.config(bg="#2E2E2E",fg= "white",font=("Arial",79))
+  frase_superior.grid(column=0,row=0,ipady=10,padx = 125,pady= 50,columnspan=7)
+  
+   

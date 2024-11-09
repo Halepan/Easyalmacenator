@@ -46,5 +46,10 @@ class Control():
    return productos
 
   def Actualizacion(self,actual):
-        self.productos[actual.nombre] = actual
-        return Save_archivo(self.productos)
+   self.productos[actual.nombre] = actual
+   return Save_archivo(self.productos)
+  
+  def Borrar_product(self,nombre):
+   self.productos.pop(nombre)
+   Save_archivo(self.productos)
+   return True
