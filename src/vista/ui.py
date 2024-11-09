@@ -56,7 +56,9 @@ class Ui():
     nombre = orden[key]["nombre"]
     moneda = orden[key]["moneda"]
     if producto is None:
-     nombreiwal = {"Buscar producto":nombre.get()}
+     nombreiwal = {"Buscar productos":nombre.get()}
+     nombreiwal = self.callback(nombreiwal)
+     print(nombreiwal)
      if nombreiwal:
       raise Mismoname()
 
