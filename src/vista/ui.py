@@ -16,6 +16,10 @@ class NohayArchivo(Exception):
  """excepcion personalizada para cuando el archivo este vacio"""
  pass
 
+class Mismoname(Exception):
+ """excepcion personalizada para cuando se intente agregar un producto con un nombre ya existente"""
+ pass
+
 class Ui():
  def __init__(self,root,callback,archivo):
   self.color_fond="#2E2E2E"
@@ -51,6 +55,10 @@ class Ui():
     tipo = orden[key]["tipo"]
     nombre = orden[key]["nombre"]
     moneda = orden[key]["moneda"]
+    if producto is None:
+     nombreiwal = {"Buscar producto":nombre.get()}
+     if nombreiwal:
+      raise Mismoname()
 
     if nombre.get():
      nombre = str(nombre.get())
@@ -240,6 +248,7 @@ class Ui():
   except ValueError:messagebox.showerror("Error De Guardado", "Excepto el nombre todo lo demas se debe registrar con numeros")
   except MEntryVacios:messagebox.showerror("Error De Guardado", "Si se registro un precio, tambien se debe seleccionar el tipo de moneda")
   except UEntryVacios:messagebox.showerror("Error De Guardado", "Se debe seleccionar una unidad de medida")
+  except Mismoname:messagebox.showerror("Error De Guardado", "No se puede guardar un producto con un nombre que ya existe")
 
  def __Findlistcoincidence(self,event,nombre):
   if nombre.get(): 
